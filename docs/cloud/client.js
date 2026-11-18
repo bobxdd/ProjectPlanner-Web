@@ -19,7 +19,7 @@ let instance;
 export async function getClient() {
   if (!configured) throw new Error(configError);
   if (!instance) {
-    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.1/+esm');
     instance = createClient(SUPABASE_URL.replace(/\/$/, ''), SUPABASE_PUBLISHABLE_KEY, {
       auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true, flowType: 'pkce' }
     });
