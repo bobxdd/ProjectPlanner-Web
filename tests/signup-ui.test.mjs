@@ -11,9 +11,9 @@ function node(){
   querySelectorAll(){return[]}};
 }
 async function harness({configured=true,loginError=false}={}){
- const ids=['auth-form','submit','username','password','confirm','recovery-code','notice','tab-login','tab-signup','confirm-label','recovery-label','form-title','form-description','reset-link','cancel-recovery','recovery-instruction','recovery-output','recovery-output-code','recovery-output-message','enter-planner','return-login','copy-recovery'];
+ const ids=['auth-form','submit','username','password','confirm','recovery-code','notice','tab-login','tab-signup','confirm-label','invite-label','invite-code','recovery-label','form-title','form-description','reset-link','cancel-recovery','recovery-instruction','recovery-output','recovery-output-code','recovery-output-message','enter-planner','return-login','copy-recovery'];
  const nodes=new Map(ids.map(id=>[id,Object.assign(node(),{id})]));
- nodes.get('auth-form').querySelectorAll=()=>['username','password','confirm','recovery-code','submit'].map(id=>nodes.get(id));
+ nodes.get('auth-form').querySelectorAll=()=>['username','password','confirm','invite-code','recovery-code','submit'].map(id=>nodes.get(id));
  const events={rpc:[],redirects:[],saved:[],clipboard:[]};
  const old=Object.fromEntries(['document','location','navigator','__webMock','sessionStorage'].map(k=>[k,globalThis[k]]));
  const client={rpc:async(fn,args)=>{
@@ -41,10 +41,10 @@ async function harness({configured=true,loginError=false}={}){
 test('username-only signup: no email used, 192-bit recovery code shown, session saved',async()=>{
  const h=await harness();try{
   await h.get('tab-signup').fire('click');
-  h.get('username').value=' ALPHA_42 ';h.get('password').value='secretPassphrase123!';h.get('confirm').value='secretPassphrase123!';
+  h.get('username').value=' ALPHA_42 ';h.get('password').value='secretPassphrase123!';h.get('confirm').value='secretPassphrase123!';h.get('invite-code').value='d'.repeat(48);
   await h.get('auth-form').fire('submit');
   assert.deepEqual(h.events.rpc.map(x=>x.fn),['planner_register']);
-  assert.deepEqual(h.events.rpc[0].args,{p_username:'alpha_42',p_password:'secretPassphrase123!'});
+  assert.deepEqual(h.events.rpc[0].args,{p_username:'alpha_42',p_password:'secretPassphrase123!',p_invite_code:'d'.repeat(48)});
   assert.equal(h.events.saved[0].username,'alpha_42');
   assert.equal(h.get('recovery-output-code').textContent,'b'.repeat(48));
   assert.equal(h.get('recovery-output').hidden,false);
