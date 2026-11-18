@@ -7,7 +7,7 @@ const secret=Deno.env.get('SUPABASE_SECRET_KEY')||Deno.env.get('SUPABASE_SERVICE
 const allowedOrigin=Deno.env.get('PLANNER_ALLOWED_ORIGIN')||'https://bobxdd.github.io';
 const admin=secret&&url?createClient(url,secret,{auth:{persistSession:false,autoRefreshToken:false}}):null;
 const actions={
- planner_register:['p_username','p_password'],
+ planner_register:['p_username','p_password','p_invite_code'],
  planner_login:['p_username','p_password'],
  planner_recover:['p_username','p_recovery_code','p_new_password'],
  planner_whoami:['p_token'],
@@ -20,7 +20,7 @@ const actions={
 const perIp={planner_register:[5,3600],planner_login:[60,600],planner_recover:[10,3600]};
 const expectedErrors=[
  'username_invalid','username_taken','password_invalid','invalid_login',
- 'login_limited','recovery_invalid','recovery_limited','session_expired','state_invalid'
+ 'login_limited','invitation_invalid','registration_closed','recovery_invalid','recovery_limited','session_expired','state_invalid'
 ];
 const headers={
  'Access-Control-Allow-Origin':allowedOrigin,
