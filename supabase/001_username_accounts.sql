@@ -262,7 +262,7 @@ do $$ declare x record; begin
       'planner_register','planner_login','planner_whoami','planner_logout',
       'planner_recover','planner_change_password','planner_state_get','planner_state_init','planner_state_put')
   loop
-    execute 'revoke all on function ' || x.name || ' from public';
+    execute 'revoke all on function ' || x.name || ' from public,anon,authenticated';
     execute 'grant execute on function ' || x.name || ' to service_role';
   end loop;
 end $$;
