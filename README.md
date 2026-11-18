@@ -38,3 +38,7 @@ Die erwartete Adresse ist `https://bobxdd.github.io/ProjectPlanner-Web/`, **eine
 15 JavaScript-Kontotests, Asset-Checks und Syntaxprüfungen bestanden. **Keine** Live-Supabase-Tests, kein vollständiger Browser-E2E-Test, keine echte Zwei-Konten-Abnahme oder nachgewiesene 1:1-Funktionsparität. Gemeinsame Bearbeitung über verschiedene Konten und zuverlässige Offline-Synchronisierung sind noch nicht fertig. Die öffentliche Registrierung benötigt vor Produktivbetrieb weiteres Missbrauchs-/Rate-Limiting.
 
 **Keine privaten Projekte importieren, bevor Backend und Zugriffsregeln live geprüft wurden.**
+
+## Sicherheitsvorbereitung (19.11.2026)
+
+Die Benutzername-Konto-RPCs werden auf **serverseitige Aufrufe** beschränkt. Die Client-Passwortprüfung berücksichtigt nun bcrypts 72-UTF-8-Byte-Grenze. Die nächste Änderung ergänzt eine vorgeschaltete Edge-Function; **vor ihrer Installation funktionieren diese neuen RPC-Berechtigungen nicht als Live-Anmeldung**. Die Website ist derzeit ohnehin nicht betriebsbereit. Bis zum geprüften Backend keine privaten Projektdaten importieren.
