@@ -1,10 +1,11 @@
-import {getClient, configured, configError} from './client.js';
+import {configured, configError} from './client.js';
+import {plannerRpc} from './rpc.js';
 import {normalizeUsername,validateSignup,validateRecoveryCode,authErrorMessage,MIN_PASSWORD_LENGTH} from './auth-policy.mjs';
 import {readSession,saveSession,clearSession} from './session.js';
 const $=q=>document.querySelector(q);
 const form=$('#auth-form'), submit=$('#submit'), name=$('#username'), password=$('#password'), confirmation=$('#confirm'), code=$('#recovery-code');
 const notice=$('#notice'), tabs=[$('#tab-login'),$('#tab-signup')];
-let mode='login',busy=false,client=null;
+let mode='login',busy=false,client={rpc:plannerRpc};
 const plannerUrl=new URL('./planner.html',location.href).href;
 function tell(message,ok=false){notice.hidden=!message;notice.classList.toggle('ok',ok);notice.textContent=message||'';}
 function setMode(next){mode=next;tell('');
@@ -36,7 +37,6 @@ function showRecovery(result){
 async function rpc(fn,args){const {data,error}=await client.rpc(fn,args);if(error)throw error;if(data?.error)throw Error(data.error);return data;}
 async function init(){
  if(!configured){tell(configError);form.querySelectorAll('input,button').forEach(el=>el.disabled=true);tabs.forEach(t=>t.disabled=true);return;}
- client=await getClient();
  const session=readSession();
  if(session){try{const result=await rpc('planner_whoami',{p_token:session.token});if(result?.id){location.replace(plannerUrl);return;}}catch{}
   clearSession();}
