@@ -49,8 +49,9 @@ Deno.serve(async req=>{
   input=JSON.parse(raw);
  }catch{return reply({error:'invalid_request'},400);}
  const action=input?.action;
+ if(typeof action!=='string'||!Object.hasOwn(actions,action))return reply({error:'invalid_request'},400);
  const required=actions[action];
- if(!required||!input.params||typeof input.params!=='object'||Array.isArray(input.params))return reply({error:'invalid_request'},400);
+ if(!input.params||typeof input.params!=='object'||Array.isArray(input.params))return reply({error:'invalid_request'},400);
  const keys=Object.keys(input.params);
  if(keys.length!==required.length||required.some(key=>!keys.includes(key)))return reply({error:'invalid_request'},400);
  if(required.includes('p_token')&&!/^[a-f0-9]{64}$/.test(input.params.p_token))return reply({error:'session_expired'},401);
