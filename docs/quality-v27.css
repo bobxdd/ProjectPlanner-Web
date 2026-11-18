@@ -1,0 +1,26 @@
+/* Project Planner 2.7: persistent navigation in immersive file hub. */
+body.file-hub-active .orbit-header{display:grid;grid-template-columns:minmax(150px,1fr) auto minmax(205px,1fr);align-items:center;gap:14px;min-height:94px;height:auto}
+body.file-hub-active .orbit-header-actions{justify-self:end}
+.orbit-quick-nav{display:flex;gap:5px;align-items:center;justify-content:center;min-width:0;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:5px;background:rgba(17,19,24,.78);box-shadow:inset 0 1px rgba(255,255,255,.06)}
+.orbit-quick-link{display:inline-flex;align-items:center;justify-content:center;gap:6px;color:#b9c0c8;background:transparent;border:1px solid transparent;border-radius:9px;padding:9px 10px;font:600 12px/1.2 inherit;white-space:nowrap;cursor:pointer}
+.orbit-quick-link svg{width:15px;height:15px;flex:none}
+.orbit-quick-link:hover,.orbit-quick-link:focus-visible{color:#fff;background:#ffffff14}
+.orbit-quick-link.active{background:#ffffff19;border-color:#ffffff29;color:#fff}
+.orbit-quick-link:focus-visible,.entity-context-menu button:focus-visible{outline:2px solid #d4d9e2;outline-offset:2px}
+.orbit-header-actions [data-orbit-exit] svg{transform:rotate(180deg)}
+.orbit-header-actions [data-orbit-exit]{border-color:#ffffff30}
+@media(max-width:1180px){body.file-hub-active .orbit-header{grid-template-columns:minmax(0,1fr) auto;gap:8px;padding-top:13px;padding-bottom:10px}.orbit-quick-nav{grid-row:2;grid-column:1/-1;justify-self:stretch}.orbit-quick-link{flex:1}}
+@media(max-width:700px){body.file-hub-active .orbit-header{grid-template-columns:minmax(0,1fr) auto;padding:9px 12px}.orbit-header-actions [data-orbit-upload]{display:none}.orbit-quick-link{font-size:11px;padding:8px 3px}.orbit-quick-link svg{width:13px}.orbit-quick-nav{gap:0}.orbit-toolbar{padding:8px 12px}.orbit-header-actions [data-orbit-exit] span{display:none}}
+/* All entity menus are compact: only contextual actions; file menu stays separate. */
+.entity-context-menu{position:fixed;z-index:2100;min-width:222px;max-width:min(330px,calc(100vw - 16px));padding:6px;border:1px solid #ffffff30;border-radius:14px;background:rgba(22,24,30,.96);backdrop-filter:blur(22px);box-shadow:0 18px 55px #000b, inset 0 1px #ffffff18;color:#f1f3f7}
+.entity-context-menu[hidden]{display:none!important}
+.entity-context-menu .menu-heading{padding:9px 11px;color:#aab2c0;font-size:11px;letter-spacing:.025em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entity-context-menu .menu-rule{height:1px;background:#ffffff20;margin:6px 5px}
+.entity-context-menu button{width:100%;display:flex;align-items:center;gap:11px;padding:11px 12px;min-height:40px;border:0;border-radius:9px;background:transparent;color:#eceef3;font-size:13px;text-align:left;cursor:pointer}
+.entity-context-menu button:hover{background:#ffffff16}.entity-context-menu button svg{width:16px;height:16px;flex:none;color:#b7c1d0}.entity-context-menu button.is-danger{color:#ffc0c0}.entity-context-menu button.is-danger svg{color:#ffc0c0}
+.entity-context-menu .menu-hint{font-size:10px;color:#9ca5b2;padding:5px 12px 7px}
+.topic-more{margin-right:2px}
+.save-indicator{position:fixed;bottom:13px;right:18px;z-index:1800;min-height:30px;padding:7px 12px;border:1px solid #ffffff22;border-radius:20px;background:rgba(17,19,24,.88);color:#abb4c0;backdrop-filter:blur(12px);box-shadow:0 5px 22px #0006;font:600 11px system-ui;cursor:default}
+.save-indicator[data-mode="error"]{color:#ffd2d2;border-color:#fb9c9c77;cursor:pointer}
+.save-indicator[data-mode="saving"]{color:#e8dfb4}
+.save-indicator:focus-visible{outline:2px solid #e3d4fd;outline-offset:3px}

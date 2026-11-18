@@ -1,0 +1,6 @@
+<!doctype html><html lang="de"><meta charset="utf-8"><title>Project Planner – Datei herunterladen</title><body>Die Datei wird geladen …<script type="module">
+import {getClient} from './client.js';import {readSession} from './session.js';import {makeStorage} from './storage.js';
+const session=readSession();const id=new URLSearchParams(location.search).get('id');
+if(!session||!/^[a-f0-9]{24}$/.test(id||'')){document.body.textContent='Bitte melde dich an.';throw Error('Session or file id invalid')}
+try{const sb=await getClient(),storage=makeStorage(sb,session);const p=`${session.user_id}/${id}.bin`;const {data,error}=await storage.from('planner-files').download(p);if(error)throw error;const link=document.createElement('a');link.href=URL.createObjectURL(data);link.download='Anhang-'+id+'.bin';link.click();document.body.textContent='Download gestartet.';setTimeout(()=>URL.revokeObjectURL(link.href),10000)}catch(_e){document.body.textContent='Datei nicht verfügbar.'}
+</script></body></html>

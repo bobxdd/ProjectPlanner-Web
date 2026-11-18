@@ -1,0 +1,20 @@
+/* Compact confirmation in the existing dark glass palette, no layout shifts. */
+#unsaved-warning[open] {
+  position:fixed;
+  inset:0;
+  margin:auto;
+  box-sizing:border-box;
+  width:min(430px,calc(100vw - 36px));
+  max-width:430px;
+  border:1px solid rgba(207,199,255,.22);
+  border-radius:18px;
+  padding:22px;
+  background:rgba(22,21,33,.97);
+  box-shadow:0 24px 72px rgba(0,0,0,.65);
+  color:#f3f3fc;
+}
+#unsaved-warning::backdrop {background:rgba(0,0,0,.48)}
+#unsaved-warning h2 {margin:0 0 10px;font-size:1.18rem}
+#unsaved-warning p {margin:0 0 20px;color:#c8c3db;line-height:1.5}
+#unsaved-warning .unsaved-actions {display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+#unsaved-warning .unsaved-actions button {min-height:38px}

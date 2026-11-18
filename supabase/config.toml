@@ -1,0 +1,3 @@
+# Custom opaque session credentials are checked by SQL, not by the Supabase JWT gateway.
+[functions.planner-files]
+verify_jwt = false

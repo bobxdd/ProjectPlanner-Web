@@ -1,0 +1,49 @@
+/* Layout consistency 3.6.2: only dashboard and project modules. */
+:root{--pp-space-xs:8px;--pp-space-sm:12px;--pp-space-md:16px;--pp-space-lg:24px;--pp-radius-card:20px;--pp-module-header:58px;--pp-compact-height:224px;--pp-standard-height:320px;--pp-large-height:448px;--pp-collapsed-height:136px}
+.widget-grid,.topic-module-grid{gap:var(--pp-space-md);align-items:stretch}
+.dashboard-module-card,.topic-module-card{--module-height:var(--pp-standard-height);box-sizing:border-box;min-width:0;min-height:var(--module-height)!important;height:100%;display:flex;flex-direction:column;border-radius:var(--pp-radius-card);overflow:hidden;}
+.dashboard-module-card.module-size-compact,.topic-module-card.module-size-compact{--module-height:var(--pp-compact-height)}
+.dashboard-module-card.module-size-large,.topic-module-card.module-size-large{--module-height:var(--pp-large-height)}
+.dashboard-module-card.is-collapsed,.topic-module-card.is-collapsed{min-height:var(--pp-collapsed-height)!important}
+.dashboard-module-card .module-header,.topic-module-card .module-header{min-height:var(--pp-module-header);box-sizing:border-box;display:flex;align-items:center;gap:var(--pp-space-sm);flex-shrink:0;margin:0;padding:10px 14px;border-bottom:1px solid #ffffff17}
+.dashboard-module-card .module-header h2,.topic-module-card .module-header .topic-module-title{margin:0;min-width:0;flex:1;line-height:1.35;font-size:14px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dashboard-module-card .module-header .widget-controls,.topic-module-card .module-header .topic-module-actions{display:flex;gap:var(--pp-space-xs);align-items:center;flex-wrap:nowrap;flex-shrink:0}
+.dashboard-module-card .surface-body,.topic-module-card .topic-module-body{min-height:0;max-height:calc(var(--module-height) - var(--pp-module-header) - 1px);width:100%;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding:var(--pp-space-sm) 2px}
+.dashboard-module-card .surface-body{padding:var(--pp-space-sm) 0}
+.topic-module-card .topic-module-body{padding:0}
+.topic-module-card .topic-module-body>.topic-detail-section,.topic-module-card .topic-module-body>.topic-inline-roadmap{box-sizing:border-box;min-height:0;height:auto;padding:var(--pp-space-md)}
+.dashboard-module-card .module-collapsed-summary,.topic-module-card .module-collapsed-summary{display:flex;align-items:center;justify-content:center;flex:1;min-height:64px;padding:var(--pp-space-sm);text-align:center;font-size:12px;color:#b8b1c9}
+.dashboard-module-card .module-collapsed-summary[hidden],.topic-module-card .module-collapsed-summary[hidden]{display:none!important}
+.dashboard-module-card.is-collapsed .module-header,.topic-module-card.is-collapsed .module-header{border-bottom:1px solid #ffffff0d}
+.dashboard-module-card .module-drag,.topic-module-card .module-drag{min-width:36px;min-height:36px;border-radius:10px;font-size:19px;cursor:grab;touch-action:none}
+.dashboard-module-card .icon-btn,.topic-module-card .icon-btn{min-width:36px;min-height:36px;flex-shrink:0;border-radius:10px}
+.dashboard-module-card button:focus-visible,.topic-module-card button:focus-visible,.module-config-row :focus-visible{outline:2px solid #d3bbff;outline-offset:2px}
+.module-config-list{display:flex;flex-direction:column;gap:var(--pp-space-xs);min-width:0;max-height:min(65vh,660px);overflow:auto;padding:4px;}
+.module-config-row{display:grid!important;grid-template-columns:38px minmax(85px,1fr) minmax(100px,1.15fr) minmax(92px,.8fr) minmax(82px,.72fr) auto 38px 38px;align-items:center;gap:var(--pp-space-xs);padding:var(--pp-space-sm);border-radius:14px;border:1px solid #ffffff1e;background:rgba(255,255,255,.035);min-width:0}
+.module-config-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.module-config-control{display:flex;flex-direction:column;gap:4px;min-width:0;color:#b5b0c2;font-size:11px;line-height:1.2}
+.module-config-control .field-select{width:100%;min-width:0;max-width:100%;height:36px;padding:4px 7px;font-size:12px;border-radius:9px}
+.module-config-check{display:flex;align-items:center;flex-direction:column;gap:5px;font-size:11px;color:#b5b0c2}
+.module-config-check input{accent-color:#bba8f8;min-width:18px;min-height:18px}
+.module-config-row>button{min-width:36px;min-height:36px}
+.module-config-list .module-drag{min-width:36px;min-height:36px}
+.topic-config-list.module-config-list{display:flex;max-height:none;overflow:visible}
+.topic-module-config{max-height:min(70vh,740px);overflow-y:auto}
+@media(max-width:980px){.topic-module-grid{grid-template-columns:1fr}.topic-module-card.wide{grid-column:1}}
+@media(max-width:750px){.module-config-row{grid-template-columns:38px minmax(90px,1fr) minmax(120px,1fr) 38px;row-gap:10px}.module-config-row>.module-config-control{grid-column:span 2}.module-config-row>.module-config-check{grid-column:auto}.module-config-row>button:last-child{grid-column:auto}}
+@media(max-width:580px){.widget-grid,.topic-module-grid{grid-template-columns:minmax(0,1fr);gap:12px}.dashboard-module-card,.topic-module-card{min-height:var(--module-height)!important}.dashboard-module-card .module-header,.topic-module-card .module-header{flex-wrap:nowrap;min-height:60px;padding:10px 12px}.dashboard-module-card .module-header .widget-controls,.topic-module-card .module-header .topic-module-actions{flex-wrap:nowrap}.dashboard-module-card .module-header h2,.topic-module-card .module-header .topic-module-title{font-size:13px}.module-config-row{grid-template-columns:36px minmax(0,1fr) 36px;gap:8px}.module-config-row>.module-config-control{grid-column:span 3}.module-config-row>.module-config-check{grid-column:span 2;flex-direction:row;justify-content:flex-start;gap:10px}.module-config-row .module-config-name{grid-column:span 2}.module-config-row>button:last-child{grid-column:auto}}
+/* The settings dialog needs enough space for clear, labelled controls. */
+#modal.modal-shell:has(.module-config-list){width:min(96vw,980px);max-height:92vh}
+#modal.modal-shell:has(.module-config-list) .modal-content{padding:20px 24px 24px}
+.project-grid{gap:var(--pp-space-md);align-items:stretch}
+.project-grid>.project-card{min-height:176px;height:100%}
+.topic-file-entry,.detail-task,.quick-task,.due-row{min-height:52px;box-sizing:border-box}
+.topic-file-entry{min-height:64px}
+.topic-module-heading{margin-top:var(--pp-space-lg);margin-bottom:var(--pp-space-md)}
+.module-config-row .module-pos-select option{font-size:12px}
+@media(max-width:750px){#modal.modal-shell:has(.module-config-list) .modal-content{padding:14px}}
+/* Keep settings spacious and the action footer outside the scrolling list. */
+#modal.modal-shell:has(.module-config-list){max-width:min(980px,calc(100vw - 24px))!important;width:min(980px,96vw)!important;overflow-y:auto}
+.topic-module-config{display:block!important;max-height:none!important;overflow:visible!important}
+.topic-config-list.module-config-list{max-height:min(50vh,500px)!important;overflow-y:auto!important;overflow-x:hidden!important;display:flex!important;flex-direction:column;}
+.topic-config-footer{position:static!important;margin-top:14px;padding-top:14px}

@@ -1,0 +1,126 @@
+/* Project Planner 2.6: neutral, dark, readable glass shell.
+   Existing --topic, --cat, --status and user-picked project colors are preserved. */
+:root{
+ color-scheme:dark;
+ font-family:"Segoe UI Variable Text","Segoe UI",Inter,system-ui,sans-serif;
+ --bg:#070809;--surface:rgba(17,19,22,.89);--surface-strong:#1a1d21;
+ --line:rgba(222,229,237,.135);--line-hi:rgba(245,248,252,.24);
+ --text:#f1f3f6;--sub:#d1d5dc;--muted:#abb3bd;--accent:#dce2e9;
+ --shadow:0 20px 48px rgba(0,0,0,.43),inset 0 1px rgba(255,255,255,.09);
+}
+html{scrollbar-color:#585e66 #111317}
+body{background:radial-gradient(ellipse 75vw 48vh at 48% -20%,rgba(188,198,210,.095),transparent 90%),linear-gradient(145deg,#0b0c0e 0%,#070809 56%,#0b0c0e 100%);font-size:14px;letter-spacing:.002em;line-height:1.52;-webkit-font-smoothing:antialiased}
+.background-grid{opacity:.23;filter:grayscale(1)}
+body:not(.file-hub-active) .main-navigation{
+ background:linear-gradient(180deg,rgba(28,30,34,.92),rgba(12,13,15,.93));
+ border-bottom:1px solid rgba(236,241,247,.17);
+ box-shadow:inset 0 1px rgba(255,255,255,.10),0 15px 46px rgba(0,0,0,.28);
+ backdrop-filter:blur(22px) saturate(1.05);
+}
+body:not(.file-hub-active) .topic-filter-bar{background:rgba(11,12,14,.86);border-bottom:1px solid rgba(245,248,253,.12);backdrop-filter:blur(16px)}
+.workspace>.topbar{background:rgba(11,12,14,.75);border-color:rgba(232,237,244,.12)}
+.brand-mark{filter:drop-shadow(0 5px 12px #8e98a633)}
+.brand-mark span{background:linear-gradient(140deg,#d4d7dc,#586068);border-color:#ffffff86}
+.brand-name,.page-heading h1,.page-title,.topic-inline-heading h2{color:#f5f7f9;letter-spacing:-.034em}
+.page-heading h1{font-weight:700}
+.page-heading .eyebrow,.eyebrow{color:#b6bec9;font-weight:750;letter-spacing:.13em}
+.lede,.page-heading .lede{color:#b7bfc9;font-size:13px;max-width:720px}
+.side-item,.search-trigger,.category-row-action,.add-filter{color:#c8cdd4}
+.side-item:hover,.search-trigger:hover,.category-row-action:hover{background:rgba(255,255,255,.08);color:#fff}
+.side-item.active{background:rgba(221,228,237,.095);color:#f4f7fa;border:1px solid rgba(244,248,252,.22);box-shadow:inset 0 1px rgba(255,255,255,.09)}
+.category-filters .side-category.active{border-color:rgba(255,255,255,.20)}
+.search-trigger,.icon-btn,.add-filter{background:rgba(231,236,242,.055);border:1px solid rgba(232,237,244,.16);box-shadow:inset 0 1px rgba(255,255,255,.06)}
+.search-trigger kbd,.search-dialog kbd{color:#c0c5ce;border-color:#ffffff32}
+/* Persistent panels: readable charcoal glass, restrained blur at the edges. */
+.widget.glass,.settings-panel.glass,.task-table.glass,.task-table,
+.kanban-col,.kanban-item,.note-card,.topic-detail-section,.topic-inline-roadmap,
+.roadmap-scope-bar,.roadmap-single-shell>.roadmap-area{
+ background:linear-gradient(142deg,rgba(255,255,255,.075),rgba(255,255,255,.022) 30%,rgba(11,13,16,.91) 75%),rgba(20,23,27,.89);
+ border:1px solid rgba(232,237,243,.17);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 16px 34px rgba(0,0,0,.31);
+ backdrop-filter:blur(18px) saturate(.92);
+}
+.widget .surface-title,.settings-panel h2,.task-table-head,.kanban-head,.topic-detail-section>header h2{color:#f0f3f7;font-weight:680}
+.widget .surface-body,.widget p,.settings-panel p,.settings-panel small,.task-name small,.task-table-row .muted,.kanban-item small,.note-card p,.note-card small{color:#b7bec8}
+.settings-panel{padding:clamp(18px,2vw,26px)}
+.settings-panel p{line-height:1.62}
+.settings-panel h2{letter-spacing:-.016em}
+.edit-row,.task-table-row,.file-row,.file-mini{background:rgba(255,255,255,.027);border-color:rgba(227,234,243,.13)}
+.edit-row:hover,.task-table-row:hover,.file-row:hover,.file-mini:hover{background:rgba(255,255,255,.055)}
+.task-table-head,.kanban-head{background:rgba(244,248,252,.045);border-color:#ffffff20}
+.kanban-col{border-radius:18px}.kanban-item{background:linear-gradient(140deg,#22262a,#15171a);border:1px solid #ffffff19}
+.roadmap-view-switch{background:rgba(18,20,24,.92);border:1px solid #ffffff25;box-shadow:inset 0 1px #ffffff16}
+.roadmap-view-switch button{color:#b8bec8}
+.roadmap-view-switch button.active{background:linear-gradient(120deg,#f8fafc22,#e7ebf00c);border-color:#ffffff4b;color:#fff;box-shadow:inset 0 1px #ffffff25,0 5px 12px #0004}
+.roadmap-track,.topic-track{scrollbar-color:#626971 #14161a}
+.roadmap-area{border-color:#ffffff35;box-shadow:inset 0 1px 0 #ffffff2b,0 20px 39px #0008}
+/* Preserve each area's existing --topic-colored header, illustration and stage markers. */
+.roadmap-stage{border-color:#ffffff25;box-shadow:inset 0 1px #ffffff18,0 6px 17px #0005}
+.roadmap-area-footer,.roadmap-stage-tasks{border-color:#ffffff14}
+/* Consistent controls; project/category colors in the illustration and data remain untouched. */
+.btn,.field-select,.text-field,.textarea,.search-dialog input{font-family:inherit}
+.btn,.btn.primary,.icon-btn,.roadmap-inline-add{border:1px solid rgba(234,240,245,.21);background:linear-gradient(151deg,rgba(243,246,250,.13),rgba(131,141,154,.045));color:#e9edf2;box-shadow:inset 0 1px rgba(255,255,255,.12)}
+.btn:hover,.btn.primary:hover,.icon-btn:hover,.roadmap-inline-add:hover{border-color:rgba(255,255,255,.43);background:rgba(235,241,248,.16);color:#fff}
+.btn.danger,.delete-inline:hover{color:#ffadb2;border-color:#ef8e9a55}
+.field-select,.text-field,.textarea,.file-search-box{background:rgba(8,9,11,.74);color:#e9edf1;border:1px solid rgba(224,231,239,.26)}
+.field-select:focus,.text-field:focus,.textarea:focus,.file-search-box:focus-within{outline:2px solid rgba(207,220,233,.55);outline-offset:1px;border-color:#dce4ec}
+.field-select option{background:#15171b;color:#e9edf1}
+.form-field>span,.field-label{color:#cbd1d9;font-size:12px;font-weight:650}
+.help,.picker-help,.data-note{color:#aeb5be}
+.modal-shell,.search-dialog{background:linear-gradient(140deg,rgba(67,72,78,.88),rgba(25,28,33,.99) 25%,rgba(12,14,17,.99) 85%);border:1px solid rgba(245,248,252,.26);box-shadow:inset 0 1px #ffffff24,0 29px 90px #000e;backdrop-filter:blur(25px) saturate(.94)}
+.modal-shell::backdrop{background:rgba(0,0,0,.79);backdrop-filter:blur(9px)}
+.modal-head{border-bottom-color:rgba(255,255,255,.17)}
+.modal-head h2{color:#f5f7fa;letter-spacing:-.025em}
+.modal-head p{color:#b7bfc9}
+.modal-footer{border-top-color:#ffffff24}
+.search-hit{color:#e1e5eb}
+.search-hit:hover{background:#ffffff12}
+.search-hit small{color:#adb6c0}
+::selection{background:#ffffff43;color:#fff}
+:where(button,a,input,select,textarea,[tabindex]):focus-visible{outline:2px solid #d3dbe6;outline-offset:2px}
+/* Context menu, on the top-most modal layer when necessary. */
+.file-context-menu{position:fixed;z-index:2147483646;width:min(310px,calc(100vw - 16px));max-height:min(80vh,560px);overflow:auto;padding:7px;border-radius:17px;color:#edf0f5;background:linear-gradient(145deg,rgba(61,67,75,.95),rgba(24,27,32,.98) 24%,rgba(13,15,18,.99));border:1px solid rgba(241,246,251,.25);box-shadow:0 22px 70px #000e,inset 0 1px #ffffff2a;backdrop-filter:blur(24px) saturate(.9);-webkit-backdrop-filter:blur(24px);isolation:isolate}
+.file-context-menu[hidden]{display:none!important}
+.file-menu-title{padding:11px 13px 10px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.file-menu-name{font-weight:660;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}
+.file-menu-title small{color:#aeb8c2;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-menu-items{display:flex;flex-direction:column;gap:2px}
+.file-context-menu button{display:flex;align-items:center;gap:11px;width:100%;border:1px solid transparent;border-radius:9px;padding:10px 12px;text-align:left;background:none;color:#e3e7ec;font-size:12.5px;min-height:38px}
+.file-context-menu button:hover,.file-context-menu button:focus-visible{background:rgba(234,241,249,.11);border-color:rgba(244,248,253,.15);color:#fff;outline:none}
+.file-context-menu button svg{width:17px;height:17px;color:#c3cad4;flex:none}
+.file-context-menu button span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-context-menu button small{font-size:16px;color:#aab6c2}
+.file-menu-separator{height:1px;background:rgba(242,246,250,.13);margin:5px 6px}
+.file-menu-help{color:#84909d;font-size:10px;margin:10px 12px 5px}
+.file-menu-subtitle{flex-direction:row;align-items:center;padding:7px 6px 10px;gap:8px}
+.file-menu-subtitle strong{font-size:13px}
+.file-menu-subtitle .file-menu-back{width:34px;min-width:34px;padding:6px;display:grid;place-items:center}
+.file-menu-subtitle .file-menu-back svg{transform:rotate(180deg)}
+.file-menu-targets{display:flex;flex-direction:column;gap:3px;max-height:min(50vh,350px);overflow:auto}
+.file-menu-targets button i{width:14px;height:14px;border-radius:50%;background:var(--file-target);box-shadow:inset 0 1px #ffffff71;flex:none}
+.file-menu-targets button small{font-size:10px;color:#9ca6b2}
+.file-menu-empty{padding:14px;color:#adb7c1;font-size:12px}
+.file-properties{display:grid;gap:2px}
+.file-properties>div{display:grid;grid-template-columns:minmax(110px,.4fr) minmax(0,1fr);gap:14px;padding:11px 6px;border-bottom:1px solid #ffffff15}
+.file-properties span{color:#aab4bf;font-size:12px}
+.file-properties strong{overflow-wrap:anywhere;font-weight:570;color:#f2f4f7;font-size:12px}
+.file-rename-field{display:flex;align-items:center;gap:10px}
+.file-rename-field .text-field{flex:1;min-width:0}
+.file-rename-field span{flex:none;color:#aab4bf}
+[data-file-id],.orbit-file-filmstrip [data-orbit-file-index],.search-hit[data-search-type=file]{cursor:context-menu}
+.file-actions-more{min-width:36px;display:grid;place-items:center}
+.file-actions-more svg{width:17px;height:17px}
+/* The orbital scene uses its own already-dark 2.5 skin; just harmonize typography. */
+.orbit-header,.orbit-toolbar{font-family:inherit}
+.orbit-brand h1{font-weight:720;letter-spacing:-.03em}
+.orbit-brand small,.orbit-counter,.orbit-gallery-hint{color:#adb6c1}
+@media(max-width:800px){body:not(.file-hub-active) .main-navigation{background:rgba(12,13,15,.96)}.modal-shell{border-radius:17px}.file-context-menu{max-height:65vh}}
+@media(prefers-reduced-motion:reduce){.file-context-menu{transition:none!important}}
+/* The view switcher should not leave a long empty tinted strip. */
+.roadmap-scope-bar{display:flex;width:fit-content;max-width:100%;align-items:center;gap:14px;padding:5px;border-radius:16px;margin-bottom:15px;min-height:0}
+.roadmap-picker{padding:0 8px}
+.settings-panel p,.note-card p,.task-table-row .task-name small{font-size:12.5px}
+.settings-panel .edit-row strong,.task-table-row .task-name strong,.topic-detail-section .file-main strong{font-size:13px}
+.field-select,.text-field,.textarea{font-size:13px}
+.file-rename-modal{width:min(94vw,480px)}
+@media(max-width:710px){.roadmap-scope-bar{width:100%;flex-wrap:wrap}.roadmap-view-switch{width:100%}.roadmap-picker{width:100%;padding:0 8px 8px}}

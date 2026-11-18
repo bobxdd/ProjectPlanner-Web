@@ -1,0 +1,101 @@
+TAP version 13
+# Subtest: username-only signup: no email used, 192-bit recovery code shown, session saved
+ok 1 - username-only signup: no email used, 192-bit recovery code shown, session saved
+  ---
+  duration_ms: 18.230504
+  type: 'test'
+  ...
+# Subtest: login with user name and password redirects to original Planner
+ok 2 - login with user name and password redirects to original Planner
+  ---
+  duration_ms: 4.982534
+  type: 'test'
+  ...
+# Subtest: invalid login remains on login screen without leaking details
+ok 3 - invalid login remains on login screen without leaking details
+  ---
+  duration_ms: 3.410082
+  type: 'test'
+  ...
+# Subtest: password recovery requires recovery code and rotates it
+ok 4 - password recovery requires recovery code and rotates it
+  ---
+  duration_ms: 5.580018
+  type: 'test'
+  ...
+# Subtest: invalid code prevents any recovery network request
+ok 5 - invalid code prevents any recovery network request
+  ---
+  duration_ms: 3.938221
+  type: 'test'
+  ...
+# Subtest: without Supabase config do not allow signup or login
+ok 6 - without Supabase config do not allow signup or login
+  ---
+  duration_ms: 3.504466
+  type: 'test'
+  ...
+# Subtest: username validation and normalization
+ok 7 - username validation and normalization
+  ---
+  duration_ms: 1.606615
+  type: 'test'
+  ...
+# Subtest: strict password policy and matching confirmation
+ok 8 - strict password policy and matching confirmation
+  ---
+  duration_ms: 0.477077
+  type: 'test'
+  ...
+# Subtest: 256-bit session tokens must be random-looking hex; recovery code 192 bits
+ok 9 - 256-bit session tokens must be random-looking hex; recovery code 192 bits
+  ---
+  duration_ms: 0.36968
+  type: 'test'
+  ...
+# Subtest: public key only, never secret key on GitHub Pages
+ok 10 - public key only, never secret key on GitHub Pages
+  ---
+  duration_ms: 1.050775
+  type: 'test'
+  ...
+# Subtest: mapped errors do not expose SQL details
+ok 11 - mapped errors do not expose SQL details
+  ---
+  duration_ms: 0.29113
+  type: 'test'
+  ...
+# Subtest: no fabricated email addresses or non-public credentials in frontend auth logic
+ok 12 - no fabricated email addresses or non-public credentials in frontend auth logic
+  ---
+  duration_ms: 12.108066
+  type: 'test'
+  ...
+# Subtest: original Planner canvas and modules preserved, QR omitted
+ok 13 - original Planner canvas and modules preserved, QR omitted
+  ---
+  duration_ms: 2.552165
+  type: 'test'
+  ...
+# Subtest: critical account database operations always require opaque token
+ok 14 - critical account database operations always require opaque token
+  ---
+  duration_ms: 2.243671
+  type: 'test'
+  ...
+# Subtest: private files need verified session in Edge Function; never service key in pages
+ok 15 - private files need verified session in Edge Function; never service key in pages
+  ---
+  duration_ms: 4.314649
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 153.466724
+HTML asset links, no-email form, private SQL and original UI modules: OK
