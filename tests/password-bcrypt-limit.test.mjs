@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {validateSignup,MAX_PASSWORD_LENGTH,authErrorMessage} from '../docs/cloud/auth-policy.mjs';
+const signup=password=>validateSignup({username:'alice_test',password,confirmation:password});
+test('password accepts 12 ASCII characters',()=>assert.equal(signup('a'.repeat(12)),''));
+test('password accepts 72 ASCII bytes',()=>assert.equal(signup('a'.repeat(72)),''));
+test('password rejects 73 ASCII bytes',()=>assert.match(signup('a'.repeat(73)),/72/));
+test('password rejects 76 bytes of Unicode',()=>assert.match(signup('💜'.repeat(19)),/72/));
+test('password accepts Unicode within byte cap',()=>assert.equal(signup('💜'.repeat(12)),''));
+test('password never truncates a long repeated suffix',()=>assert.match(signup('a'.repeat(72)+'DIFFERENT'),/72/));
+test('password_invalid maps to accurate limit',()=>assert.match(authErrorMessage(new Error('password_invalid')),/72/));
+test('MAX_PASSWORD_LENGTH documents bcrypt byte limit',()=>assert.equal(MAX_PASSWORD_LENGTH,72));
