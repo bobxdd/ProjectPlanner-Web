@@ -10,12 +10,13 @@ const plannerUrl=new URL('./planner.html',location.href).href;
 function tell(message,ok=false){notice.hidden=!message;notice.classList.toggle('ok',ok);notice.textContent=message||'';}
 function setMode(next){mode=next;tell('');
  const signup=next==='signup',recover=next==='recover';
+ $('#invite-label').hidden=!signup;$('#invite-code').required=signup;
  tabs.forEach(t=>{t.hidden=recover;t.classList.toggle('selected',t.id==='tab-'+next);t.disabled=busy;});
  $('#confirm-label').hidden=!signup&&!recover;confirmation.required=signup||recover;
  $('#recovery-label').hidden=!recover;code.required=recover;
  $('#password').autocomplete=signup||recover?'new-password':'current-password';
- $('#form-title').textContent=signup?'Konto erstellen':recover?'Zugang wiederherstellen':'Willkommen zurück';
- $('#form-description').textContent=signup?'Du brauchst keine E-Mail-Adresse. Bewahre deinen einmaligen Wiederherstellungscode sicher auf.':recover?'Benutzername, Wiederherstellungscode und neues Passwort eingeben.':'Melde dich mit Benutzername und Passwort an.';
+ $('#form-title').textContent=signup?'Einladung einlösen':recover?'Zugang wiederherstellen':'Willkommen zurück';
+ $('#form-description').textContent=signup?'Nur mit persönlichem Einladungscode. Danach bewahre deinen einmaligen Wiederherstellungscode sicher auf.':recover?'Benutzername, Wiederherstellungscode und neues Passwort eingeben.':'Melde dich mit Benutzername und Passwort an.';
  submit.textContent=signup?'Konto erstellen':recover?'Passwort zurücksetzen':'Anmelden';
  $('#reset-link').hidden=next!=='login';
  $('#cancel-recovery').hidden=!recover;
@@ -60,7 +61,7 @@ form.addEventListener('submit',async e=>{e.preventDefault();if(busy||!client)ret
  if(!username||!pw){tell('Bitte Benutzername und Passwort eingeben.');return;}
  busySet(true);tell('');
  try{
-  if(mode==='signup'){const result=await rpc('planner_register',{p_username:username,p_password:pw});password.value='';confirmation.value='';showRecovery(result);return;}
+  if(mode==='signup'){const invite=$('#invite-code').value.trim().toLowerCase();if(!/^[a-f0-9]{48}$/.test(invite))throw Error('invitation_invalid');const result=await rpc('planner_register',{p_username:username,p_password:pw,p_invite_code:invite});$('#invite-code').value='';password.value='';confirmation.value='';showRecovery(result);return;}
   if(mode==='recover'){const result=await rpc('planner_recover',{p_username:username,p_recovery_code:code.value.trim().toLowerCase(),p_new_password:pw});password.value='';confirmation.value='';code.value='';showRecovery(result);return;}
   const result=await rpc('planner_login',{p_username:username,p_password:pw});password.value='';saveSession(result);location.replace(plannerUrl);
  }catch(error){tell(authErrorMessage(error))}finally{busySet(false)}
