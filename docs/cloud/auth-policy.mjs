@@ -13,6 +13,8 @@ export function validateSignup({username,password,confirmation}){
 export function validateRecoveryCode(code){return /^[a-f0-9]{48}$/i.test(String(code??'').trim());}
 export function authErrorMessage(error){
  const msg=String(error?.message||error||'').toLowerCase();
+ if(msg.includes('invitation_invalid'))return 'Dieser Einladungscode ist ungültig oder bereits verwendet.';
+ if(msg.includes('registration_closed'))return 'Die beiden Plätze sind bereits vergeben. Weitere Konten sind ausgeschlossen.';
  if(msg.includes('username_taken')||msg.includes('duplicate key'))return 'Dieser Benutzername ist leider bereits vergeben.';
  if(msg.includes('username_invalid'))return 'Der Benutzername ist ungültig.';
  if(msg.includes('password_invalid'))return 'Das Passwort benötigt mindestens 12 Zeichen und höchstens 72 UTF-8-Bytes.';
