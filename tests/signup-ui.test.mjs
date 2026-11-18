@@ -31,7 +31,8 @@ async function harness({configured=true,loginError=false}={}){
  globalThis.__webMock={client,configured,events,readSession:()=>null,saveSession:r=>events.saved.push(r)};
  const source=await readFile(new URL('../docs/cloud/auth.js',import.meta.url),'utf8');
  const policyUrl=new URL('../docs/cloud/auth-policy.mjs',import.meta.url).href;
- const adapted=source.replace("import {getClient, configured, configError} from './client.js';","const getClient=async()=>globalThis.__webMock.client;const configured=globalThis.__webMock.configured;const configError='Supabase ist nicht eingerichtet';")
+ const adapted=source.replace("import {configured, configError} from './client.js';","const configured=globalThis.__webMock.configured;const configError='Supabase ist nicht eingerichtet';")
+  .replace("import {plannerRpc} from './rpc.js';","const plannerRpc=(fn,args)=>globalThis.__webMock.client.rpc(fn,args);")
   .replace("from './auth-policy.mjs';",`from '${policyUrl}';`)
   .replace("import {readSession,saveSession,clearSession} from './session.js';","const readSession=globalThis.__webMock.readSession;const saveSession=globalThis.__webMock.saveSession;const clearSession=()=>{};");
  await import('data:text/javascript;base64,'+Buffer.from(adapted).toString('base64')+'#'+Math.random());
