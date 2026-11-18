@@ -64,7 +64,7 @@ async function commit(next,expected){
  if(error)throw Error(error.message);return data!==null;
 }
 const supportedMime=new Set(['image/png','image/jpeg','image/gif','image/webp','image/heic','application/pdf','text/plain','text/csv','application/zip','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.openxmlformats-officedocument.presentationml.presentation']);
-const filePath=id=>`${user.id}/${id}.bin`;
+const filePath=id=>`00000000-0000-4000-8000-000000000001/${id}.bin`;
 async function uploadFiles(form){const projectId=String(form.get('projectId')||''), taskId=String(form.get('taskId')||'');const files=form.getAll('files').filter(f=>f instanceof File);
  if(files.length===0)return fail('Keine Dateien ausgewählt');if(files.length>25)return fail('Maximal 25 Dateien pro Upload');const current=await readState();if(projectId&&!current.projects.some(p=>p.id===projectId))return fail('Bereich nicht gefunden');if(taskId&&!current.tasks.some(t=>t.id===taskId&&t.projectId===projectId))return fail('Aufgabe nicht gefunden');
  const uploaded=[];try{for(const file of files){if(file.size>50*1024*1024)throw Error('Datei ist größer als 50 MB');const ext=(file.name.split('.').pop()||'').toLowerCase();if(['html','htm','svg','js','mjs','exe','bat','cmd','ps1'].includes(ext))throw Error('Aktiver Dateityp ist aus Sicherheitsgründen gesperrt');const id=newId(),type=supportedMime.has(file.type)?file.type:'application/octet-stream';const {error}=await sb.storage.from('planner-files').upload(filePath(id),file,{upsert:false,contentType:type,cacheControl:'0'});if(error)throw Error(error.message);uploaded.push({id,projectId,taskId,name:file.name.split(/[\\/]/).pop().slice(0,240)||'Datei',size:file.size,mime:type,createdAt:now()});}
@@ -186,7 +186,7 @@ async function init(){
   if(!configured)throw Error(configError);
   session=readSession();if(!session){location.replace('./index.html');return;}
   const publicClient=await getClient();
-  sb={rpc:plannerRpc,storage:makeStorage(publicClient,session),auth:{signOut:async()=>{try{await publicClient.rpc('planner_logout',{p_token:session.token});}finally{clearSession();}return {error:null};}}};
+  sb={rpc:plannerRpc,storage:makeStorage(publicClient,session),auth:{signOut:async()=>{try{await plannerRpc('planner_logout',{p_token:session.token});}finally{clearSession();}return {error:null};}}};
   const {data,error}=await sb.rpc('planner_whoami',{p_token:session.token});
   if(error||!data?.id||data.id!==session.user_id){clearSession();location.replace('./index.html');return;}
   user={id:data.id,username:data.username};await getRow();
