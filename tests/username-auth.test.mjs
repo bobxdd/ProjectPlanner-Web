@@ -15,7 +15,7 @@ test('strict password policy and matching confirmation',()=>{
  assert.equal(validateSignup(base),'');
  assert.match(validateSignup({...base,password:'1234'}),/12/);
  assert.match(validateSignup({...base,confirmation:'different'}),/überein/);
- assert.match(validateSignup({...base,password:'x'.repeat(257),confirmation:'x'.repeat(257)}),/256/);
+ assert.match(validateSignup({...base,password:'x'.repeat(73),confirmation:'x'.repeat(73)}),/72/);
 });
 test('256-bit session tokens must be random-looking hex; recovery code 192 bits',()=>{
  assert.equal(validateRecoveryCode('a'.repeat(48)),true);
