@@ -1,7 +1,8 @@
 /* Private browser data adapter for the original Project Planner UI.
-   Requires the RLS policies from supabase/001_private_accounts.sql.
+   Requires server-only RPCs in supabase/001_username_accounts.sql.
    NOT the legacy Windows TCP/peer sync backend. */
 import { getClient, configured, configError } from './client.js';
+import { plannerRpc } from './rpc.js';
 import {readSession,clearSession} from './session.js';
 import {makeStorage} from './storage.js';
 const root = new URL('../', import.meta.url);
@@ -185,7 +186,7 @@ async function init(){
   if(!configured)throw Error(configError);
   session=readSession();if(!session){location.replace('./index.html');return;}
   const publicClient=await getClient();
-  sb={rpc:(fn,args)=>publicClient.rpc(fn,args),storage:makeStorage(publicClient,session),auth:{signOut:async()=>{try{await publicClient.rpc('planner_logout',{p_token:session.token});}finally{clearSession();}return {error:null};}}};
+  sb={rpc:plannerRpc,storage:makeStorage(publicClient,session),auth:{signOut:async()=>{try{await publicClient.rpc('planner_logout',{p_token:session.token});}finally{clearSession();}return {error:null};}}};
   const {data,error}=await sb.rpc('planner_whoami',{p_token:session.token});
   if(error||!data?.id||data.id!==session.user_id){clearSession();location.replace('./index.html');return;}
   user={id:data.id,username:data.username};await getRow();
