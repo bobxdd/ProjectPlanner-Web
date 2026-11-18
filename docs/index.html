@@ -6,8 +6,8 @@
 <div class="tabs" role="tablist"><button type="button" id="tab-login" class="selected" aria-selected="true">Anmelden</button><button type="button" id="tab-signup" aria-selected="false">Konto erstellen</button></div>
 <form id="auth-form">
 <label id="username-label">Benutzername<input required type="text" id="username" name="username" autocomplete="username" placeholder="dein_name" maxlength="24" minlength="3" pattern="[A-Za-z][A-Za-z0-9_]{2,23}"></label>
-<label id="password-label">Passwort<input required type="password" id="password" name="password" autocomplete="current-password" minlength="12" maxlength="256" placeholder="Mindestens 12 Zeichen"></label>
-<label id="confirm-label" hidden>Passwort wiederholen<input type="password" id="confirm" name="confirm" autocomplete="new-password" minlength="12" maxlength="256"></label>
+<label id="password-label">Passwort<input required type="password" id="password" name="password" autocomplete="current-password" minlength="12" maxlength="72" placeholder="Mindestens 12 Zeichen"></label>
+<label id="confirm-label" hidden>Passwort wiederholen<input type="password" id="confirm" name="confirm" autocomplete="new-password" minlength="12" maxlength="72"></label>
 <label id="recovery-label" hidden>Einmaliger Wiederherstellungscode<input type="text" id="recovery-code" name="recovery-code" autocapitalize="off" autocomplete="off" spellcheck="false" minlength="48" maxlength="48" placeholder="48-stelliger Sicherheitscode"></label>
 <p id="recovery-instruction" hidden>Der Code wurde bei deiner Kontoerstellung angezeigt. Ohne E-Mail gibt es keine andere automatische Passwortwiederherstellung.</p>
 <button class="submit" id="submit" type="submit">Anmelden</button>
