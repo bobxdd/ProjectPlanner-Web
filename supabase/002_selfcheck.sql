@@ -10,3 +10,9 @@ where n.nspname='public' and proname like 'planner_%' order by proname;
 -- Every planner_* RPC with access to account tables must have prosecdef=true.
 select id,public,file_size_limit from storage.buckets where id='planner-files';
 -- Bucket must be private; file max 50 MiB on Supabase Free.
+
+-- Each row must return FALSE/FALSE: no browser account may call privileged RPCs directly.
+select p.proname, has_function_privilege('anon',p.oid,'EXECUTE') as anon_execute,
+ has_function_privilege('authenticated',p.oid,'EXECUTE') as authenticated_execute
+from pg_proc p join pg_namespace n on n.oid=p.pronamespace
+where n.nspname='public' and p.proname like 'planner_%';
