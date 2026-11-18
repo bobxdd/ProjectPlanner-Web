@@ -1,4 +1,4 @@
-// Public browser configuration. Fill these two public values in from your own Supabase project.
-// Never put a Supabase secret key or service_role key here.
-export const SUPABASE_URL = '';
-export const SUPABASE_PUBLISHABLE_KEY = '';
+// Public Supabase project URL and publishable key: designed to be embedded in browser clients.
+// Never put secret/service-role credentials in this file.
+export const SUPABASE_URL = 'https://bbwmefgcqdrzutgyjlmb.supabase.co';
+export const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_otTRJ7Jo33jTiEJ-S0p1Yw_4w6siGs3';
