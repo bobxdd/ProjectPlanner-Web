@@ -22,7 +22,7 @@ serve(async req=>{
   const raw=await req.text();if(raw.length>10000)return result({error:'Anfrage zu groß'},413);
   const input=JSON.parse(raw);const ids=input.ids;
   if(!Array.isArray(ids)||ids.length<1||ids.length>50||!ids.every((s:unknown)=>typeof s==='string'&&ID.test(s)))return result({error:'Ungültige Dateiliste'},400);
-  const paths=ids.map((id:string)=>`${account}/${id.toLowerCase()}.bin`);
+  const paths=ids.map((id:string)=>`00000000-0000-4000-8000-000000000001/${id.toLowerCase()}.bin`);
   const bucket=admin.storage.from('planner-files');
   if(input.action==='sign-upload'){
     if(ids.length!==1)return result({error:'Nur eine Upload-Freigabe je Anfrage'},400);
