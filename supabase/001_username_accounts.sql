@@ -36,6 +36,42 @@ alter table public.planner_sessions enable row level security;
 alter table public.planner_user_states enable row level security;
 revoke all on public.planner_accounts, public.planner_sessions, public.planner_user_states from public, anon, authenticated;
 
+
+-- Fixed-window server-side throttling. The Edge Function supplies only a SHA-256 key.
+-- This is baseline protection; it is NOT a substitute for CAPTCHA or network limits.
+create table if not exists public.planner_auth_limits(
+  limit_key text primary key,
+  window_opened timestamptz not null default now(),
+  hits int not null default 0
+);
+alter table public.planner_auth_limits enable row level security;
+revoke all on public.planner_auth_limits from public,anon,authenticated;
+
+create or replace function public.planner_auth_throttle(
+  p_key text,p_max int,p_window_seconds int
+) returns boolean language plpgsql security definer
+set search_path=pg_catalog, public as $$
+declare v_hits int;
+begin
+  if p_key !~ '^[a-f0-9]{64}$' or p_max not between 1 and 1000
+     or p_window_seconds not between 10 and 86400 then
+    raise exception 'throttle_invalid' using errcode='22023';
+  end if;
+  insert into public.planner_auth_limits(limit_key,window_opened,hits)
+    values (p_key,now(),1)
+  on conflict(limit_key) do update
+    set hits=case
+      when public.planner_auth_limits.window_opened < now()-make_interval(secs=>p_window_seconds)
+      then 1 else public.planner_auth_limits.hits+1 end,
+      window_opened=case
+      when public.planner_auth_limits.window_opened < now()-make_interval(secs=>p_window_seconds)
+      then now() else public.planner_auth_limits.window_opened end
+  returning hits into v_hits;
+  return v_hits<=p_max;
+end; $$;
+revoke all on function public.planner_auth_throttle(text,int,int) from public,anon,authenticated;
+grant execute on function public.planner_auth_throttle(text,int,int) to service_role;
+
 -- The functions run as their owner (SQL-editor database administrator) and never
 -- return password hashes, recovery digests or other users' private data.
 create or replace function public.planner_session_account(p_token text)
