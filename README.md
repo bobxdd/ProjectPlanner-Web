@@ -1,44 +1,58 @@
-# Project Planner Web
+# Project Planner Web – private Zwei-Personen-Umgebung
 
-**Stand: 18. November 2026 — Entwickler-Beta, nicht produktiv freigegeben**
+**Stand: 19. November 2026 — Backend bereitgestellt, GitHub Pages noch nicht aktiviert.**
+**Noch keine Produktivfreigabe und keine echten Benutzerkonten.**
 
-Das neue separate Repository enthält die auf HTML/CSS/JavaScript basierende Original-Oberfläche des Windows-Project-Planners und einen Web-Datenadapter. **QR-Codes sind bewusst ausgenommen.** Die Desktop-App und die beiden Quiz-Repositories bleiben unangetastet.
+Diese Webversion verwendet die originale Project-Planner-Oberfläche aus dem
+Windows-Projekt (ohne QR-Funktion). Sie ist **keine öffentliche Projektplattform**:
+Es gibt genau **einen gemeinsamen Arbeitsbereich** für **maximal zwei Personen**
+mit getrennten persönlichen Benutzernamen und Passwörtern — **ohne E-Mail**.
 
-## Benutzerkonto ohne E-Mail
+## Was bereits fertiggestellt ist
 
-- Konto erstellen: Benutzername (3–24 Zeichen), Passwort (mind. 12 Zeichen) und Wiederholung.
-- Login im Project Planner mit Benutzername + Passwort; keine E-Mail-Adresse und keine externe Login-Seite.
-- Einmalig angezeigter Wiederherstellungscode ersetzt einen E-Mail-Reset. Code unbedingt sicher aufbewahren.
-- Passwörter und Sitzungen werden serverseitig durch die SQL-RPCs in `supabase/001_username_accounts.sql` verwaltet (bcrypt / SHA-256-Sessiontokenhashes).
-- Supabase Edge Function `planner-files` ist für private Upload- und Download-Freigaben vorgesehen.
+- Supabase-Datenbank installiert: Konto-, Session- und Einladungsverwaltung.
+- Harte PostgreSQL-Grenze von **zwei Konten**, auch bei gleichzeitiger Registrierung.
+- Harte PostgreSQL-Grenze von **zwei persönlichen Einladungen** (Slot 1 und 2).
+- Geschützter gemeinsamer Projektzustand mit optimistischer Revisionskontrolle
+  (Änderungen werden nicht still überschrieben).
+- Privater Storage-Bucket und gemeinsame Dateien für beide Benutzer.
+- Zwei aktive Supabase Edge Functions: `planner-auth` und `planner-files`.
+- GitHub-Weboberfläche mit Einladungscode, Benutzernamen und Passwort;
+  Browser enthält nur den offiziellen öffentlichen Supabase Publishable Key.
+- Vorhandener automatischer 2,5-Sekunden-Abgleich der Planner-Oberfläche
+  mit Konflikterkennung und Vorsicht bei gerade geöffneten Eingaben.
+- Automatisierte Account-, Client-, Asset- und Zwei-Personen-Strukturtests.
 
-**Wichtig:** Nur GitHub Pages kann weder Benutzerkonten noch eine sichere Datenbank betreiben. Eine GitHub-/Supabase-Verknüpfung ist keine automatische Installation der SQL-Funktionen.
+## Noch nicht abgeschlossen
 
-## Verzeichnis
+1. **GitHub Pages muss im Repository manuell einmalig über Settings → Pages →
+   GitHub Actions eingeschaltet werden.** Der automatische Versuch scheiterte
+   an GitHubs „Resource not accessible by integration“.
+2. Die zwei Einmal-Einladungscodes müssen sicher im Supabase SQL Editor ausgegeben
+   und von den beiden Personen verwendet werden. Zurzeit: **0 Konten, 0 Codes**.
+3. Browser-End-to-End-Test in zwei echten Sitzungen inklusive Uploads,
+   Anmeldung, gemeinsamer Bearbeitung und Konflikten.
+4. Abschließende Prüfung vor einem Import vertraulicher Desktop-Projekte.
 
-- `docs/`: originale Planner-Frontend-Dateien samt neuem Benutzername-Login.
-- `supabase/`: SQL-Migration, RLS-/Berechtigungsprüfung und private Datei-Edge-Function.
-- `tests/`: automatisierte Konten- und Asset-Tests.
-- `.github/workflows/pages.yml`: testet die Dateien und publiziert `docs/`, sobald die öffentliche Supabase-Projektkonfiguration bereitsteht.
-- `00_START_HIER.md`: vollständige Einrichtungs- und Sicherheitsanleitung.
-- `TESTBERICHT.md`: getestete und noch offene Funktionen.
+**Vollständige praktische Anleitung:** [SETUP_ZWEI_PERSONEN.md](SETUP_ZWEI_PERSONEN.md).
 
-## Was vor einer echten Veröffentlichung noch fehlt
+**Repository:** https://github.com/bobxdd/ProjectPlanner-Web
 
-1. Eigene Supabase-Verbindung autorisieren und SQL-Migration **in einem frischen Projekt** ausführen.
-2. Edge Function `planner-files` installieren, Zugriffsrechte und private Storage-Bucket testen.
-3. GitHub-Actions-Variablen `SUPABASE_URL` und `SUPABASE_PUBLISHABLE_KEY` konfigurieren (nur **öffentliche** Werte). Der Workflow verweigert absichtlich ein Deployment ohne diese Angaben.
-4. In GitHub Settings → Pages **GitHub Actions** auswählen.
-5. Den vollständigen Browserablauf mit zwei echten Testkonten und echten Dateien prüfen, bevor private Daten importiert werden.
+**Geplante Website:** https://bobxdd.github.io/ProjectPlanner-Web/
 
-Die erwartete Adresse ist `https://bobxdd.github.io/ProjectPlanner-Web/`, **eine funktionierende Live-Seite ist noch nicht bestätigt**.
+## Sicherheit und Sichtbarkeit
 
-## Qualität und Einschränkungen
+GitHub Pages liefert öffentliche HTML/CSS/JavaScript-Dateien aus, auch wenn
+ein unterstützter GitHub-Plan privaten Quellcode im Repository erlaubt.
+Nur die **Daten** werden serverseitig abgeschottet; die Anmeldeseite selbst ist
+keine private URL. Der Schutz erfolgt nicht über versteckte Buttons oder
+geheime Frontend-Schlüssel, sondern durch Einladung, Sitzung, RLS und
+gesperrte Datenbankfunktionen.
 
-15 JavaScript-Kontotests, Asset-Checks und Syntaxprüfungen bestanden. **Keine** Live-Supabase-Tests, kein vollständiger Browser-E2E-Test, keine echte Zwei-Konten-Abnahme oder nachgewiesene 1:1-Funktionsparität. Gemeinsame Bearbeitung über verschiedene Konten und zuverlässige Offline-Synchronisierung sind noch nicht fertig. Die öffentliche Registrierung benötigt vor Produktivbetrieb weiteres Missbrauchs-/Rate-Limiting.
+Datenbank-Installationsfolge für ein neues Projekt:
+`supabase/001_username_accounts.sql`,
+`supabase/003_two_person_workspace.sql`,
+`supabase/004_exactly_two_invitations.sql`.
+`supabase/002_selfcheck.sql` liefert ergänzende Strukturprüfungen.
 
-**Keine privaten Projekte importieren, bevor Backend und Zugriffsregeln live geprüft wurden.**
-
-## Sicherheitsvorbereitung (19.11.2026)
-
-Die Benutzername-Konto-RPCs werden auf **serverseitige Aufrufe** beschränkt. Die Client-Passwortprüfung berücksichtigt nun bcrypts 72-UTF-8-Byte-Grenze. Die nächste Änderung ergänzt eine vorgeschaltete Edge-Function; **vor ihrer Installation funktionieren diese neuen RPC-Berechtigungen nicht als Live-Anmeldung**. Die Website ist derzeit ohnehin nicht betriebsbereit. Bis zum geprüften Backend keine privaten Projektdaten importieren.
+**Keine vertraulichen Daten importieren, bevor die echte Zwei-Personen-Abnahme erfolgt ist.**
