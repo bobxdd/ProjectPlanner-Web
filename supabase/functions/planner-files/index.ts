@@ -2,12 +2,10 @@
 // Service-role key is an Edge Function secret supplied by Supabase, NEVER a
 // GitHub Pages asset. Opaque tokens are verified via planner_session_account RPC.
 import {serve} from 'https://deno.land/std@0.224.0/http/server.ts';
-import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
+import {createClient} from 'npm:@supabase/supabase-js@2.119.1';
 const endpoint=Deno.env.get('SUPABASE_URL')!;
-const publicKey=Deno.env.get('SUPABASE_ANON_KEY')||Deno.env.get('SUPABASE_PUBLISHABLE_KEY')!;
-const secret=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const secret=Deno.env.get('SUPABASE_SECRET_KEY')||Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const admin=createClient(endpoint,secret,{auth:{autoRefreshToken:false,persistSession:false}});
-const anon=createClient(endpoint,publicKey,{auth:{autoRefreshToken:false,persistSession:false}});
 const allowedOrigin=Deno.env.get('PLANNER_ALLOWED_ORIGIN')||'https://bobxdd.github.io';
 const cors={'Access-Control-Allow-Origin':allowedOrigin,'Access-Control-Allow-Headers':'authorization,apikey,content-type','Access-Control-Allow-Methods':'POST,OPTIONS','Vary':'Origin','Cache-Control':'no-store'};
 const result=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers:{...cors,'Content-Type':'application/json','X-Content-Type-Options':'nosniff'}});
@@ -19,7 +17,7 @@ serve(async req=>{
  const bearer=/^Bearer ([a-f0-9]{64})$/.exec(req.headers.get('Authorization')||'');
  if(!bearer)return result({error:'Anmeldung erforderlich'},401);
  try{
-  const {data:account,error:authErr}=await anon.rpc('planner_session_account',{p_token:bearer[1]});
+  const {data:account,error:authErr}=await admin.rpc('planner_session_account',{p_token:bearer[1]});
   if(authErr||!account)return result({error:'Anmeldung abgelaufen'},401);
   const raw=await req.text();if(raw.length>10000)return result({error:'Anfrage zu groß'},413);
   const input=JSON.parse(raw);const ids=input.ids;
