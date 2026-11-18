@@ -27,11 +27,8 @@ jobs:
         run: find docs -type f \( -name '*.js' -o -name '*.mjs' \) -print0 | xargs -0 -n1 node --check
       - name: Check original UI assets, no-email login and removed QR
         run: python3 tests/check_assets.py
-      - name: Inject public, non-secret Supabase config
-        env:
-          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
-          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
-        run: python3 scripts/configure_public.py
+      - name: Verify public Supabase configuration is present
+        run: python3 scripts/verify_public.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
