@@ -1,7 +1,7 @@
 -- Project Planner V3: username + password, no email, private state.
 -- SETUP: run in a new dedicated Supabase project (not an already live V2 schema).
--- All browser access to private tables is revoked; only audited SECURITY DEFINER
--- functions grant scoped access after validating a random, server-stored session token.
+-- Browser access to tables and SECURITY DEFINER RPCs is revoked.
+-- Only an allow-listed Edge Function can invoke those RPCs with a server-only key.
 create schema if not exists extensions;
 create extension if not exists pgcrypto with schema extensions;
 revoke create on schema public from public;
@@ -47,9 +47,9 @@ as $$
     and length(p_token) = 64 and s.expires_at > now() limit 1;
 $$;
 revoke all on function public.planner_session_account(text) from public, anon, authenticated;
--- Only the Edge Function invokes this via the published RPC. A token is
+-- Only a server-side Edge Function can invoke this RPC with a secret key. A token is
 -- 256-bit random; exposing its associated ID does not grant a usable login.
-grant execute on function public.planner_session_account(text) to anon, authenticated;
+grant execute on function public.planner_session_account(text) to service_role;
 
 create or replace function public.planner_register(p_username text, p_password text)
 returns jsonb language plpgsql security definer
@@ -64,7 +64,7 @@ begin
   if v_name !~ '^[a-z][a-z0-9_]{2,23}$' then
     raise exception 'username_invalid' using errcode='22023';
   end if;
-  if length(p_password) < 12 or length(p_password) > 256 then
+  if length(p_password) < 12 or octet_length(p_password) > 72 then
     raise exception 'password_invalid' using errcode='22023';
   end if;
   insert into public.planner_accounts(username,password_hash,recovery_hash)
@@ -86,6 +86,7 @@ declare
   v_account public.planner_accounts%rowtype;
   v_token text := encode(gen_random_bytes(32),'hex');
 begin
+  if octet_length(p_password)>72 then return jsonb_build_object('error','invalid_login'); end if;
   select * into v_account from public.planner_accounts where username=v_name for update;
   if not found then
     perform pg_sleep(0.12);
@@ -135,7 +136,7 @@ set search_path = pg_catalog, extensions, public
 as $$
 declare v_account public.planner_accounts%rowtype; v_code text := encode(gen_random_bytes(24),'hex');
 begin
-  if length(p_new_password)<12 or length(p_new_password)>256 then
+  if length(p_new_password)<12 or octet_length(p_new_password)>72 then
     raise exception 'password_invalid' using errcode='22023';
   end if;
   select * into v_account from public.planner_accounts where username=lower(btrim(p_username)) for update;
@@ -166,7 +167,7 @@ declare v_id uuid; v_hash text;
 begin
   v_id:=public.planner_session_account(p_token);
   if v_id is null then raise exception 'session_expired' using errcode='22023'; end if;
-  if length(p_new_password)<12 or length(p_new_password)>256 then raise exception 'password_invalid' using errcode='22023'; end if;
+  if length(p_new_password)<12 or octet_length(p_new_password)>72 then raise exception 'password_invalid' using errcode='22023'; end if;
   select password_hash into v_hash from public.planner_accounts where id=v_id for update;
   if v_hash != crypt(p_old_password,v_hash) then raise exception 'invalid_login' using errcode='22023'; end if;
   update public.planner_accounts set password_hash=crypt(p_new_password,gen_salt('bf',12)) where id=v_id;
@@ -217,7 +218,7 @@ begin
   return v_new; -- null means concurrent update, not a silent overwrite.
 end; $$;
 
--- Public RPCs only; underlying tables never exposed to browser clients.
+-- Server-side Edge RPCs only; tables and privileged functions are not directly callable by browsers.
 do $$ declare x record; begin
   for x in select p.oid::regprocedure::text as name from pg_proc p
       join pg_namespace n on p.pronamespace=n.oid
@@ -226,7 +227,7 @@ do $$ declare x record; begin
       'planner_recover','planner_change_password','planner_state_get','planner_state_init','planner_state_put')
   loop
     execute 'revoke all on function ' || x.name || ' from public';
-    execute 'grant execute on function ' || x.name || ' to anon,authenticated';
+    execute 'grant execute on function ' || x.name || ' to service_role';
   end loop;
 end $$;
 
