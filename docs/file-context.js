@@ -1,5 +1,5 @@
 'use strict';
-// File operations are handled by the local Go backend so copy/move remain durable.
+// File operations use the existing PlannerCloud API so shared cloud state stays durable.
 let fileMenuId='',fileMenuMode='main',fileMenuReturnFocus=null;
 const fileRenameModal=(()=>{const d=document.createElement('dialog');d.id='file-rename-dialog';d.className='modal-shell file-rename-modal';document.body.append(d);return d})();
 const fileMenu=(()=>{const el=document.createElement('div');el.id='file-context-menu';el.className='file-context-menu';el.setAttribute('role','menu');el.setAttribute('aria-label','Dateiaktionen');el.hidden=true;return el})();
@@ -29,7 +29,7 @@ function fileMenuRename(d){
 }
 function fileMenuProperties(d){fileMenuHide();const p=getProject(d.projectId);dialog('Dateieigenschaften','',`<div class="file-properties"><div><span>Name</span><strong>${esc(d.name)}</strong></div><div><span>Typ</span><strong>${esc(d.mime||'Unbekannt')}</strong></div><div><span>Größe</span><strong>${esc(bytes(d.size))}</strong></div><div><span>Bereich</span><strong>${esc(p?.name||'—')}</strong></div><div><span>Aufgabe</span><strong>${esc(getTask(d.taskId)?.title||'Keine')}</strong></div><div><span>Hinzugefügt</span><strong>${esc(d.createdAt?new Date(d.createdAt).toLocaleString('de-DE'):'—')}</strong></div></div><div class="modal-footer"><div class="right"><button class="btn" data-action="close-modal">Schließen</button></div></div>`)}
 document.addEventListener('contextmenu',e=>{
- const target=e.target.closest('[data-file-id],[data-search-type="file"]');if(!target)return;const fid=target.dataset.fileId||(target.dataset.searchType==='file'?target.dataset.searchId:'');if(!fid)return;
+ const target=e.target.closest('[data-file-id],[data-file-viewer],[data-search-type="file"]');if(!target)return;const fid=target.dataset.fileId||target.dataset.fileViewer||(target.dataset.searchType==='file'?target.dataset.searchId:'');if(!fid)return;
  e.preventDefault();e.stopImmediatePropagation();fileMenuShow(fid,e.clientX,e.clientY,target);
 },true);
 document.addEventListener('click',e=>{const cancel=e.target.closest('[data-file-rename-cancel]');if(cancel){e.preventDefault();e.stopImmediatePropagation();fileRenameModal.close();return}const button=e.target.closest('[data-file-menu]');if(button){e.preventDefault();e.stopImmediatePropagation();const r=button.getBoundingClientRect();fileMenuShow(button.dataset.fileMenu,r.left,r.bottom+5,button);return}
