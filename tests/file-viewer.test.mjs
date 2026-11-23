@@ -106,3 +106,52 @@ test('private Supabase backend and 2-person revisions remain unchanged',()=>{
  assert.match(storage,/planner-files/);
  assert.match(script,/window\.PlannerCloud\?\.fileBlob/);
 });
+
+
+test('ordinary left click on file title or tile opens fullscreen rather than a new tab',async()=>{
+ const id='a'.repeat(24);
+ const h=harness([meta('notes.txt',id)],async()=>new Blob(['Hello from shared storage']));
+ const row={dataset:{fileId:id}};
+ const target={closest(selector){
+   if(selector==='[data-file-id]')return row;
+   return null;
+ }};
+ let prevented=false,stopped=false;
+ h.calls.handlers.get('click')({
+   button:0,target,
+   preventDefault(){prevented=true},
+   stopImmediatePropagation(){stopped=true}
+ });
+ assert.equal(h.dialog().open,true);
+ assert.equal(prevented,true);
+ assert.equal(stopped,true);
+ assert.equal(h.calls.windows.length,0);
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.deepEqual(h.calls.loaded,[id]);
+});
+test('right click does not launch viewer; native file context menu offers new tab',()=>{
+ const id='a'.repeat(24);
+ const h=harness([meta('notes.txt',id)],async()=>new Blob(['hello']));
+ const target={closest(){return {dataset:{fileViewer:id}}}};
+ let prevented=false;
+ h.calls.handlers.get('click')({
+   button:2,target,
+   preventDefault(){prevented=true},
+   stopImmediatePropagation(){}
+ });
+ assert.equal(prevented,false);
+ assert.equal(h.calls.windows.length,0);
+ assert.equal(h.dialog(),undefined);
+ const context=file('docs/file-context.js');
+ assert.ok(context.includes("e.target.closest('[data-file-id],[data-file-viewer],[data-search-type=\"file\"]')"));
+ assert.ok(context.includes("menuButton('new-tab','In neuem Tab öffnen'"));
+ assert.ok(context.includes("window.PPFileViewer?.openNewTab(d.id)"));
+});
+test('file-orb captions are inside a clickable and right-clickable file card',()=>{
+ const experience=file('docs/experience.js');
+ const app=file('docs/app.js');
+ assert.ok(experience.includes('<article class="file-orb-cell" data-file-id='));
+ assert.ok(experience.includes('data-file-viewer='));
+ assert.ok(!app.includes('href="'+'$'+'{fileURL(d)}" target="_blank"'));
+ assert.ok(!experience.includes('target="_blank"'));
+});
