@@ -12,7 +12,7 @@ function orbitPreview(d,mini=false){
  if(mini){return `<span class="sphere-mini-page ${type}">${type==='image'?`<img src="${url}" alt="" loading="lazy">`:`<span class="mini-glyph">${icon(fileIconName(type))}</span>`}<span>${esc(extension)}</span></span>`;}
  const n=esc(d.name), label=esc(FILE_KIND_LABEL[type]||'Datei');
  if(type==='image')return `<div class="orbit-paper-preview is-image"><img src="${url}" loading="lazy" alt="Vorschau: ${n}"></div>`;
- if(type==='pdf')return `<div class="orbit-paper-preview is-pdf"><iframe src="${url}#toolbar=0&navpanes=0&page=1&view=Fit" tabindex="-1" loading="lazy" title="Erste Seite: ${n}" aria-hidden="true"></iframe><span class="pdf-fallback">${icon('file')}<b>PDF</b></span></div>`;
+ if(type==='pdf')return `<div class="orbit-paper-preview is-pdf" aria-hidden="true"><span class="pdf-fallback">${icon('file')}<b>PDF</b></span></div>`;
  const lines=type==='sheet'?`<span class="sheet-grid">${Array.from({length:28},()=>'<i></i>').join('')}</span>`:
    `<span class="page-heading-line"></span>${Array.from({length:9},(_,i)=>`<i style="width:${i%3===2?'63':'88'}%"></i>`).join('')}`;
  return `<div class="orbit-paper-preview is-${type}"><span class="paper-type">${label}</span><div class="paper-body">${lines}</div><span class="paper-mark">${icon(fileIconName(type))}</span></div>`;
@@ -45,7 +45,7 @@ function orbitDocTransform(index,active){
 }
 function orbitDocument(d,index,active){
  const slot=index-active,dist=Math.abs(slot),transform=orbitDocTransform(index,active);
- return `<button type="button" class="orbit-document-card ${slot===0?'current':''}" data-orbit-file-index="${index}" data-file-id="${esc(d.id)}" style="transform:${transform};z-index:${20-dist};--doc-type:${esc(classifyFile(d))}" aria-label="${esc(d.name)}${slot===0?', Datei öffnen':', auswählen'}" aria-current="${slot===0?'true':'false'}">
+ return `<button type="button" class="orbit-document-card ${slot===0?'current':''}" data-orbit-file-index="${index}" data-file-id="${esc(d.id)}" style="transform:${transform};z-index:${20-dist};--doc-type:${esc(classifyFile(d))}" aria-label="${esc(d.name)}, im Vollbild öffnen" aria-current="${slot===0?'true':'false'}">
  <span class="orbit-document-back"></span><span class="orbit-document-leaf">${orbitPreview(d)}</span><span class="orbit-document-foot"><span>${esc(d.name)}</span><small>${esc(FILE_KIND_LABEL[classifyFile(d)])} · ${esc(bytes(d.size))}</small></span></button>`;
 }
 function orbitGalleryView(project){
@@ -59,10 +59,10 @@ function orbitGalleryView(project){
  <div class="orbit-gallery-ray" aria-hidden="true"></div>
  ${docs.map((d,i)=>Math.abs(i-orbitActiveFile)>4?'':orbitDocument(d,i,orbitActiveFile)).join('')}</div>
  ${count>1?`<div class="orbit-gallery-controls"><button type="button" data-orbit-file-move="-1" ${orbitActiveFile===0?'disabled':''} aria-label="Vorherige Datei">${icon('chevron')}</button><span><b>${orbitActiveFile+1}</b> / ${count}</span><button type="button" data-orbit-file-move="1" ${orbitActiveFile===count-1?'disabled':''} aria-label="Nächste Datei">${icon('chevron')}</button></div>`:''}
- <div class="orbit-selected-file" data-file-id="${esc(selected.id)}"><div><span class="file-type-chip">${esc(FILE_KIND_LABEL[classifyFile(selected)])}</span><strong title="${esc(selected.name)}">${esc(selected.name)}</strong><small>${esc(bytes(selected.size))}${selected.taskId?' · '+esc(getTask(selected.taskId)?.title||'Aufgabe'):''}</small></div><a class="orbit-open-full" href="${esc(fileURL(selected))}" target="_blank" rel="noopener">${icon('arrow')} Datei vollständig öffnen</a><button type="button" class="file-actions-more" data-file-menu="${esc(selected.id)}" aria-label="Weitere Dateiaktionen" title="Weitere Dateiaktionen">${icon('more')}</button><button type="button" data-action="delete-file" data-id="${esc(selected.id)}" aria-label="Datei löschen" title="Datei löschen">${icon('trash')}</button></div>
+ <div class="orbit-selected-file" data-file-id="${esc(selected.id)}"><div><span class="file-type-chip">${esc(FILE_KIND_LABEL[classifyFile(selected)])}</span><strong title="${esc(selected.name)}">${esc(selected.name)}</strong><small>${esc(bytes(selected.size))}${selected.taskId?' · '+esc(getTask(selected.taskId)?.title||'Aufgabe'):''}</small></div><button type="button" class="orbit-open-full" data-file-viewer="${esc(selected.id)}" aria-label="Datei ${esc(selected.name)} im Vollbild öffnen">${icon('arrow')} Im Vollbild öffnen</button><button type="button" class="file-actions-more" data-file-menu="${esc(selected.id)}" aria-label="Weitere Dateiaktionen" title="Weitere Dateiaktionen">${icon('more')}</button><button type="button" data-action="delete-file" data-id="${esc(selected.id)}" aria-label="Datei löschen" title="Datei löschen">${icon('trash')}</button></div>
  ${count>1?`<div class="orbit-file-filmstrip">${docs.map((d,i)=>`<button type="button" data-orbit-file-index="${i}" data-file-id="${esc(d.id)}" class="${i===orbitActiveFile?'selected':''}" title="${esc(d.name)}"><span>${icon(fileIconName(classifyFile(d)))}</span><small>${esc(d.name)}</small></button>`).join('')}</div>`:'<div class="orbit-one-file-note">Eine Datei · für weitere Aktionen Rechtsklick oder das Menü verwenden</div>'}`:
  `<div class="orbit-no-documents"><span class="no-doc-orb">${icon(projectIcon(project))}</span><strong>${ui.fileQuery||ui.fileType&&ui.fileType!=='all'?'Keine passenden Dateien':'Noch keine Dateien in diesem Bereich'}</strong><button type="button" class="orbit-upload" data-orbit-upload="${esc(project.id)}">${icon('upload')} Dateien hinzufügen</button></div>`}
- ${count>1?'<div class="orbit-gallery-hint">Mausrad oder wischen: Dateien durchblättern · Zuerst auswählen, dann anklicken zum Öffnen</div>':''}
+ ${count>1?'<div class="orbit-gallery-hint">Mausrad oder wischen: Dateien durchblättern · Linksklick: Vollbild · Rechtsklick: Datei-Menü</div>':''}
  </div>`;
 }
 // Replaces only the old file grid; existing project metadata, storage, and upload APIs remain unchanged.
@@ -132,7 +132,7 @@ function orbitSelectDocument(next){
    card.style.zIndex=String(20-dist);
    card.classList.toggle('current',i===nextIndex);
    card.setAttribute('aria-current',String(i===nextIndex));
-   card.setAttribute('aria-label',docs[i].name+(i===nextIndex?', Datei öffnen':', auswählen'));
+   card.setAttribute('aria-label',docs[i].name+', im Vollbild öffnen');
  }
  for(let i=Math.max(0,nextIndex-4);i<=Math.min(max,nextIndex+4);i++){
    if(!gallery.querySelector(`[data-orbit-file-index="${i}"]`))gallery.insertAdjacentHTML('beforeend',orbitDocument(docs[i],i,nextIndex));
@@ -141,7 +141,7 @@ function orbitSelectDocument(next){
  if(selected){
    const info=selected.querySelector(':scope > div');
    if(info)info.innerHTML=`<span class="file-type-chip">${esc(FILE_KIND_LABEL[classifyFile(active)])}</span><strong title="${esc(active.name)}">${esc(active.name)}</strong><small>${esc(bytes(active.size))}${active.taskId?' · '+esc(getTask(active.taskId)?.title||'Aufgabe'):''}</small>`;
-   const link=selected.querySelector('.orbit-open-full');if(link)link.href=fileURL(active);
+   const button=selected.querySelector('.orbit-open-full');if(button){button.dataset.fileViewer=active.id;button.setAttribute('aria-label','Datei '+active.name+' im Vollbild öffnen');}
    const del=selected.querySelector('[data-action="delete-file"]');if(del)del.dataset.id=active.id;
    selected.dataset.fileId=active.id;const more=selected.querySelector('[data-file-menu]');if(more)more.dataset.fileMenu=active.id;
  }
@@ -150,13 +150,16 @@ function orbitSelectDocument(next){
  document.querySelectorAll('.orbit-file-filmstrip [data-orbit-file-index]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.orbitFileIndex)===nextIndex));
  const film=document.querySelector('.orbit-file-filmstrip .selected');film?.scrollIntoView({block:'nearest',inline:'nearest',behavior:'auto'});
 }
-function orbitOpenFile(index){const docs=orbitFilesFor(orbitSelectedProject),doc=docs[index];if(!doc)return;
- if(index!==orbitActiveFile){orbitSelectDocument(index);return;}
- window.open(fileURL(doc),'_blank','noopener');
+function orbitOpenFile(index,trigger){const docs=orbitFilesFor(orbitSelectedProject),doc=docs[index];if(!doc)return;
+ // Keep the carousel selection in sync, but ALWAYS open the clicked file in the in-app viewer.
+ if(index!==orbitActiveFile)orbitSelectDocument(index);
+ const viewer=window.PPFileViewer;
+ if(!viewer?.open){toast('Vollbild-Dateiansicht nicht geladen. Bitte Seite aktualisieren.');return;}
+ viewer.open(doc.id,trigger).catch(error=>toast('Datei öffnen fehlgeschlagen: '+error.message));
 }
 document.addEventListener('click',e=>{
  const button=e.target.closest('[data-orbit-project],[data-orbit-inbox],[data-orbit-back],[data-orbit-exit],[data-orbit-file-move],[data-orbit-file-index],[data-orbit-pause],[data-orbit-turn],[data-orbit-upload],[data-orbit-fit]');
- if(!button||ui.view!=='files')return;
+ if(!button||ui.view!=='files'||(e.button!==undefined&&e.button!==0))return;
  e.preventDefault();e.stopImmediatePropagation();
  if(button.hasAttribute('data-orbit-inbox')){orbitSelectedProject=orbitInboxID;orbitActiveFile=0;window.__orbitWheelAccumulator=0;renderFiles();return;}
  if(button.hasAttribute('data-orbit-project')){orbitSelectedProject=button.dataset.orbitProject;orbitActiveFile=0;window.__orbitWheelAccumulator=0;renderFiles();return;}
@@ -167,7 +170,7 @@ document.addEventListener('click',e=>{
  if(button.hasAttribute('data-orbit-turn')){orbitRotation+=Number(button.dataset.orbitTurn)*.36;return;}
  if(button.hasAttribute('data-orbit-fit')){const world=document.getElementById('orbit-world'),count=world?.querySelectorAll('[data-orbit-node]').length||0;orbitFitPreference=!(orbitFitPreference===null?count>=9:orbitFitPreference);applyOrbitFit();return;}
  if(button.hasAttribute('data-orbit-file-move')){orbitSelectDocument(orbitActiveFile+Number(button.dataset.orbitFileMove));return;}
- if(button.hasAttribute('data-orbit-file-index')){if(performance.now()<orbitIgnoreClickUntil)return;orbitOpenFile(Number(button.dataset.orbitFileIndex));return;}
+ if(button.hasAttribute('data-orbit-file-index')){if(performance.now()<orbitIgnoreClickUntil)return;orbitOpenFile(Number(button.dataset.orbitFileIndex),button);return;}
 },true);
 document.addEventListener('wheel',e=>{
  if(ui.view!=='files'||!orbitSelectedProject||e.ctrlKey||e.metaKey)return;
