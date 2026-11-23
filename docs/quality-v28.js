@@ -95,6 +95,9 @@ window.addEventListener('click',e=>{if(e.target.closest('[data-orbit-project],[d
 function navApply(s){navReplaying=true;try{ui.category=DB.categories.some(c=>c.id===s.category)?s.category:'all';ui.project=getProject(s.project)?.id||'';ui.fileProject=s.fileProject;orbitSelectedProject=s.orbit&&getProject(s.orbit)?s.orbit:null;orbitActiveFile=s.fileIndex||0;if(typeof roadmapProjectId!=='undefined')roadmapProjectId=s.roadmap;goto(s.view==='topic'&&!ui.project?'home':s.view); }finally{navReplaying=false}}
 function navStep(direction){const dest=direction==='back'?navBackStack:navForwardStack;const opposite=direction==='back'?navForwardStack:navBackStack;if(!dest.length)return false;const snapshot=dest.pop();opposite.push(navSnapshot());navApply(snapshot);return true}
 function navDismissLayer(){
+ // A file viewer is the top-most layer; Escape must close it, not navigate out of the gallery.
+ const fullscreenReader=document.getElementById('pp-file-viewer');
+ if(fullscreenReader?.open){fullscreenReader.close();return true}
  if(typeof fileMenu!=='undefined'&&!fileMenu.hidden){fileMenuHide(true);return true}
  if(typeof entityMenu!=='undefined'&&!entityMenu.hidden){qualityMenuHide(true);return true}
  if(typeof fileRenameModal!=='undefined'&&fileRenameModal.open){fileRenameModal.close();return true}
