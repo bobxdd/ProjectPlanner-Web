@@ -60,6 +60,8 @@ function setup(){
     projectColor(){return '#999999'},
     sort(items){return [...items]},
     icon(){return ''},
+    fileURL(doc){return 'blob:orbit-test-'+doc.id},
+    fileIconName(){return 'file'},
     bytes(size){return String(size)+' B'},
     esc(value){return String(value)},
     performance:{now(){return 1000}},
