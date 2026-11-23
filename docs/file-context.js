@@ -9,7 +9,7 @@ function fileMenuRender(x,y){const d=DB.documents.find(d=>d.id===fileMenuId);if(
  const p=getProject(d.projectId),projects=sort(DB.projects);const menuButton=(cmd,title,glyph='',hint='')=>`<button type="button" role="menuitem" data-file-command="${cmd}">${glyph?icon(glyph):''}<span>${title}</span>${hint?`<small>${hint}</small>`:''}</button>`;
  if(fileMenuMode==='main'){
   fileMenu.innerHTML=`<div class="file-menu-title"><span class="file-menu-name">${esc(d.name)}</span><small>${esc(p?.name||'Datei-Eingang')} · ${esc(bytes(d.size))}</small></div><div class="file-menu-items">
-  ${menuButton('open','Öffnen','file')}${menuButton('download','Herunterladen','download')}${menuButton('annotate','Anmerkungsebene öffnen','edit')}
+  ${menuButton('open','Im Vollbild öffnen','file')}${menuButton('new-tab','In neuem Tab öffnen','file')}${menuButton('download','Herunterladen','download')}${menuButton('annotate','Anmerkungsebene öffnen','edit')}
   <div class="file-menu-separator"></div>
   ${menuButton('move-targets','In anderen Bereich verschieben','arrow','›')}${menuButton('copy-targets','In anderen Bereich kopieren','layers','›')}
   ${menuButton('rename','Umbenennen','edit')}${DB.tasks.some(t=>t.projectId===d.projectId)?menuButton('task-targets','Aufgabe zuordnen','clipboard','›'):''}${d.taskId?menuButton('detach','Von Aufgabe lösen','x'):''}${menuButton('details','Eigenschaften','list')}
@@ -46,8 +46,9 @@ document.addEventListener('click',async e=>{
  if(action==='rename'){fileMenuRename(d);return}
  if(action==='details'){fileMenuProperties(d);return}
  if(action==='delete'){const rect=cmd.getBoundingClientRect();fileMenuHide();try{await deleteFile(d.id,{getBoundingClientRect:()=>rect})}catch(err){toast(err.message)}return}
- if(action==='open'){fileMenuHide();window.open(fileURL(d),'_blank','noopener');return}
- if(action==='download'){fileMenuHide();const a=document.createElement('a');a.href=fileURL(d);a.download=d.name;document.body.appendChild(a);a.click();a.remove();return}
+ if(action==='open'){fileMenuHide();window.PPFileViewer?.open(d.id).catch(err=>toast(err.message));return}
+ if(action==='new-tab'){fileMenuHide();window.PPFileViewer?.openNewTab(d.id);return}
+ if(action==='download'){fileMenuHide();window.PPFileViewer?.download(d.id).catch(err=>toast('Herunterladen fehlgeschlagen: '+err.message));return}
  if(action==='detach'){try{await fileMenuSubmit({id:d.id,action:'detach'},'Datei von Aufgabe gelöst.')}catch(err){toast(err.message)}return}
 },true);
 document.addEventListener('keydown',e=>{
