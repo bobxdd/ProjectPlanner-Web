@@ -101,7 +101,7 @@ test('private Supabase backend and 2-person revisions remain unchanged',()=>{
  assert.match(runtime,/async function storedFile\(id\)/);
  assert.match(runtime,/async function fileBlob\(doc\)/);
  assert.match(runtime,/planner_state_put/);
- assert.match(runtime,/function desktopLiveRefresh/);
+ assert.match(file('docs/app.js'),/async function desktopLiveRefresh/);
  assert.match(storage,/sign-download/);
  assert.match(storage,/planner-files/);
  assert.match(script,/window\.PlannerCloud\?\.fileBlob/);
