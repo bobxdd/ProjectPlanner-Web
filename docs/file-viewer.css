@@ -1,0 +1,82 @@
+/* Fullscreen private file reader. Matches Project Planner's anthracite/glass UI. */
+#pp-file-viewer.pp-file-viewer{
+  position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;
+  min-width:0;min-height:0;max-width:100vw;max-height:100vh;max-height:100dvh;
+  padding:0;margin:0;border:0;border-radius:0;
+  background:#101119;color:#eae9f2;box-shadow:0 30px 100px #000b;
+  overflow:hidden;font:inherit;
+}
+#pp-file-viewer::backdrop{background:rgba(4,5,11,.88);backdrop-filter:blur(12px)}
+#pp-file-viewer .ppfv-shell{height:100%;min-height:0;display:flex;flex-direction:column;background:linear-gradient(140deg,#191a25 0%,#101119 60%,#13131e 100%)}
+#pp-file-viewer .ppfv-header{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:13px clamp(14px,2.3vw,33px);min-height:76px;box-sizing:border-box;
+  background:linear-gradient(100deg,#22202dd9,#171821ec);
+  border-bottom:1px solid #ffffff25;box-shadow:0 8px 20px #0004;
+}
+#pp-file-viewer .ppfv-file{flex:1;min-width:0;overflow:hidden}
+#pp-file-viewer .ppfv-label{display:block;font-size:9px;font-weight:760;letter-spacing:.19em;color:#b5a9d9}
+#pp-file-viewer #pp-file-viewer-title{
+  font-size:clamp(16px,1.8vw,23px);font-weight:650;line-height:1.25;
+  margin:4px 0 3px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;
+}
+#pp-file-viewer #pp-file-viewer-detail{font-size:11px;color:#a8a6b6;margin:0}
+#pp-file-viewer .ppfv-controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+#pp-file-viewer button{font:inherit;cursor:pointer}
+#pp-file-viewer .ppfv-btn,#pp-file-viewer .ppfv-zoom button{
+  border:1px solid #ffffff2b;background:#ffffff0b;color:#e8e5f1;
+  padding:10px 13px;border-radius:11px;min-height:39px;font-size:12px;font-weight:620;
+}
+#pp-file-viewer .ppfv-btn:hover,#pp-file-viewer .ppfv-zoom button:hover:not(:disabled){
+  background:#bbaaef28;border-color:#c6b0f878;
+}
+#pp-file-viewer .ppfv-zoom{display:flex;align-items:center;gap:5px;border-radius:11px;background:#101017;border:1px solid #ffffff24;padding:3px}
+#pp-file-viewer .ppfv-zoom button{min-width:30px;min-height:32px;padding:3px 8px;background:transparent;border:0;font-size:19px;line-height:1}
+#pp-file-viewer .ppfv-zoom button:disabled{opacity:.3;cursor:default}
+#pp-file-viewer .ppfv-zoom span{font-size:11px;min-width:48px;color:#bdbacb;text-align:center;font-variant-numeric:tabular-nums}
+#pp-file-viewer .ppfv-close{
+  width:41px;height:41px;border:1px solid #f6bbc650;border-radius:11px;
+  color:#ffcfdb;background:#a54b5b28;font-size:29px;line-height:1;
+}
+#pp-file-viewer .ppfv-close:hover{background:#b95d704b}
+#pp-file-viewer button:focus-visible{outline:2px solid #cbb3ff;outline-offset:3px}
+#pp-file-viewer .ppfv-body{
+  flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;
+  overflow:auto;overscroll-behavior:contain;padding:15px;
+  background:radial-gradient(circle at 50% 36%,#25223850,transparent 65%),#101119;
+}
+#pp-file-viewer .ppfv-image-stage{
+  width:100%;height:100%;min-height:0;display:flex;align-items:center;
+  justify-content:safe center;overflow:auto;overscroll-behavior:contain;
+}
+#pp-file-viewer .ppfv-image{
+  display:block;width:auto;max-width:100%;max-height:100%;height:auto;
+  object-fit:contain;box-shadow:0 15px 55px #0009;flex:none;
+}
+#pp-file-viewer .ppfv-pdf{width:100%;height:100%;min-height:0;border:0;background:#ececf0}
+#pp-file-viewer .ppfv-text{
+  width:min(100%,1150px);min-height:100%;box-sizing:border-box;align-self:stretch;
+  margin:0 auto;padding:clamp(16px,3vw,44px);border:1px solid #ffffff16;
+  border-radius:15px;background:#191a23;color:#e8e6f1;
+  white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;line-height:1.75;
+  font-family:ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace;
+  font-size:16px;box-shadow:0 16px 50px #0005;
+}
+#pp-file-viewer .ppfv-video{max-width:100%;max-height:100%;width:auto;height:auto}
+#pp-file-viewer .ppfv-audio{width:min(680px,100%);max-width:100%}
+#pp-file-viewer .ppfv-message{padding:40px;max-width:570px;text-align:center;color:#b4b2c2}
+#pp-file-viewer .ppfv-message strong{display:block;font-size:clamp(16px,2.5vw,22px);color:#f0edf7;margin-bottom:10px}
+#pp-file-viewer .ppfv-message p{font-size:13px;line-height:1.75;margin:0}
+#pp-file-viewer .ppfv-footer{flex:0 0 auto;display:flex;align-items:center;min-height:34px;box-sizing:border-box;
+  padding:7px clamp(14px,2.3vw,33px);background:#171721;
+  color:#9593a8;border-top:1px solid #ffffff19;font-size:11px}
+#pp-file-viewer [data-pfv]{touch-action:manipulation}
+@media(max-width:850px){
+ #pp-file-viewer .ppfv-header{flex-direction:column;align-items:stretch;padding:11px 14px;gap:10px}
+ #pp-file-viewer .ppfv-controls{justify-content:space-between;gap:6px}
+ #pp-file-viewer .ppfv-btn{padding:8px 9px;font-size:11px}
+ #pp-file-viewer .ppfv-close{width:38px;height:38px}
+ #pp-file-viewer .ppfv-body{padding:8px}
+ #pp-file-viewer .ppfv-text{padding:17px;border-radius:8px}
+}
+@media(prefers-reduced-motion:reduce){#pp-file-viewer *,#pp-file-viewer::backdrop{transition:none!important;animation:none!important}}
