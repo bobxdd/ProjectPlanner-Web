@@ -175,3 +175,10 @@ body.reduce-motion .orbit-system-node,body.reduce-motion .orbit-world-sphere,bod
  .orbit-selected-file .file-actions-more{grid-column:2;min-width:36px;min-height:36px}
  .orbit-selected-file [data-action="delete-file"]{grid-column:3;min-width:36px;min-height:36px}
 }
+
+/* File thumbnails are decorative: all pointer gestures land on the real document button.
+   Never allow an embedded preview/image to intercept the left-click or right-click menu. */
+.orbit-document-card .orbit-document-back,
+.orbit-document-card .orbit-document-leaf,
+.orbit-document-card .orbit-document-foot { pointer-events:none; }
+.orbit-document-card:focus-visible { outline:3px solid #c7bbff; outline-offset:5px; }
