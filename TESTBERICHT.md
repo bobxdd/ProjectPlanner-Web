@@ -48,3 +48,43 @@ Keine Produktivfreigabe, kein Penetrationstest, noch keine echten Two-User-E2E-B
 **Vorher keine privaten Projektdateien importieren.**
 
 Anleitung: [SETUP_ZWEI_PERSONEN.md](SETUP_ZWEI_PERSONEN.md)
+
+## Update 23.11.2026 – Vollbild-Dateiansicht
+
+**Live veröffentlicht über GitHub Pages**, Job/Run:
+https://github.com/bobxdd/ProjectPlanner-Web/actions/runs/45234452286
+Commit: `2f72462f78e66ab8f49a5a2330db9f3eac2e11d5`.
+
+- Dateien öffnen standardmäßig in einer bildschirmfüllenden Ansicht im Planner.
+  Dateiübersicht, Bereichsdateien, Aufgabenanhänge, Startseiten-Dateiwidgets,
+  Suchergebnisse und Rechtsklick-Menü auf die neue Ansicht umgestellt.
+- Escape (nativer modaler HTML-Dialog) und X schließen die Ansicht; Fokus kehrt
+  zum Auslöser zurück. Separater Button **In neuem Tab öffnen** und **Herunterladen**
+  bleiben erhalten.
+- Bildzoom, Browser-PDF-Anzeige nach `%PDF-`-Header-Prüfung, sichere reine
+  Textanzeige (auch CSV/JSON/Markdown/HTML/SVG als NICHT ausgeführter Text),
+  native Audio-/Videoplayer mit Browserformat-Unterstützung.
+- Nicht nativ anzeigbare Dateien (DOCX, XLSX, PPTX, ZIP usw.) werden bewusst
+  nicht an unbekannte Cloud-Konverter weitergeleitet; Download/neuer Tab.
+- Datei-Bytes werden über bestehende private `PlannerCloud.fileBlob`-Abfragen
+  geladen. Temporäre Blob-URLs werden beim Schließen widerrufen.
+- Kein Schema- oder Edge-Function-Upgrade notwendig. Unverändert: zwei Konten,
+  genau ein gemeinsamer Projektstand, optimistischer Revisionsvergleich,
+  gesicherter Supabase-Speicher.
+- Abschluss-SQL-Audit: **2 Konten, 2 Einladungen, 1 Workspace, 8 gespeicherte
+  Dateien, privater Bucket, kein direkter Anon-Tabellen-Lesezugriff**.
+- **37/37** automatische Tests bestanden. JS-Syntax, statische Assets und
+  GitHub-Pages-Deployment erfolgreich.
+
+**Abnahmegrenze:** Noch kein realer Browser-Interaktionstest mit angemeldeter
+Sitzung und euren privaten Bildern/PDFs/Textdateien. Bitte im Browser prüfen,
+dass die Darstellung, Escape/X, Zoom sowie „In neuem Tab öffnen“ bei euren
+tatsächlichen Dateien und im mobilen Layout funktionieren. Manche Browser
+unterstützen bestimmte Audio-/Videocodecs und PDF-Einbettung nicht; dann
+steht weiterhin der Originaldownload zur Verfügung.
+
+Technische Referenzen:
+- https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog
+- https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/blob
+- https://cheatsheetseries.owasp.org/cheatsheets/DOM_based_XSS_Prevention_Cheat_Sheet.html
+- https://supabase.com/docs/guides/storage/buckets/fundamentals
