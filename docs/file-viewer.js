@@ -117,10 +117,11 @@
       zoomText.textContent=String(textSize)+' px';
     }
   }
-  function openNewTab(){
-    if(!current)return;
+  function openNewTab(fileId){
+    const item=fileId?(typeof DB!=='undefined'&&DB?.documents?.find(d=>d.id===fileId)):current;
+    if(!item)return;
     // Preserve the app's established signed-URL / download fallback for a new tab.
-    const url=fileURL(current);
+    const url=fileURL(item);
     window.open(url,'_blank','noopener,noreferrer');
   }
   async function getBlob(doc){
@@ -129,10 +130,10 @@
     if(!response.ok)throw Error('Datei nicht verfügbar');
     return response.blob();
   }
-  async function download(){
-    if(!current)return;
-    const item=current;
-    const data=blob||await getBlob(item);
+  async function download(fileId){
+    const item=fileId?(typeof DB!=='undefined'&&DB?.documents?.find(d=>d.id===fileId)):current;
+    if(!item)throw Error('Datei nicht gefunden');
+    const data=blob&&current?.id===item.id?blob:await getBlob(item);
     const url=URL.createObjectURL(data);
     const a=document.createElement('a');
     a.href=url;a.download=String(item.name||'Datei');a.rel='noopener';
@@ -143,7 +144,7 @@
     ensureUI();
     const doc=typeof DB!=='undefined'&&DB?.documents?.find(item=>item.id===fileId);
     if(!doc)throw Error('Datei nicht mehr im gemeinsamen Arbeitsbereich vorhanden.');
-    if(viewer.open)viewer.close();
+    if(viewer.open){version++;body.replaceChildren();clearObjectURL();}
     returnFocus=trigger||document.activeElement;
     current=doc;
     blob=null;kind='';
@@ -158,7 +159,7 @@
     tip.textContent='Esc: Schließen · Originaldatei bleibt unverändert';
     setZoomControls(view.kind==='image'||view.kind==='text');
     message('Datei wird geöffnet …','Geschützter Download aus eurem gemeinsamen Project Planner.');
-    viewer.showModal();
+    if(!viewer.open)viewer.showModal();
     $('[data-pfv="close"]').focus();
     if(view.kind==='other'){
       message('Für diesen Dateityp gibt es noch keine sichere Browser-Darstellung',
