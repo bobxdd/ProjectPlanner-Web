@@ -222,7 +222,8 @@
   // Capturing before app.js's older click handlers prevents accidental new tabs.
   document.addEventListener('click',event=>{
     const target=event.target;
-    if(!target?.closest)return;
+    // Only a primary left click opens the in-app viewer; right click keeps its own menu.
+    if((event.button!==undefined&&event.button!==0)||!target?.closest)return;
     const direct=target.closest('[data-file-viewer]');
     const search=target.closest('[data-search-type="file"]');
     const row=target.closest('[data-file-id]');
