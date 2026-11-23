@@ -88,3 +88,40 @@ Technische Referenzen:
 - https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/blob
 - https://cheatsheetseries.owasp.org/cheatsheets/DOM_based_XSS_Prevention_Cheat_Sheet.html
 - https://supabase.com/docs/guides/storage/buckets/fundamentals
+
+## Nachbesserung 23.11.2026 – tatsächlicher Linksklick-Fehler im 3D-Datei-Hub
+
+**Ursache:** Der vorherige Fix hatte `docs/orbit.js` übersehen.
+Dort stoppte ein früher `document.addEventListener('click', ..., true)`-Handler
+die Event-Weitergabe und öffnete die ausgewählte Datei weiterhin mit
+`window.open(fileURL(doc), '_blank', 'noopener')`. Zusätzlich zeigte der
+Button „Datei vollständig öffnen“ auf einen `<a target="_blank">`-Link.
+Deshalb waren die vorherigen grünen Tests unzureichend und die Anwenderfehler
+reproduzierbar.
+
+**Fix:**
+- Die aktive und jede andere Dateikarte im 3D-Stapel öffnen jetzt per
+  primärem Linksklick immer `window.PPFileViewer.open(doc.id)`; Galerieauswahl
+  wird bei Bedarf vorher aktualisiert.
+- Der bisherige externe Öffnen-Link ist jetzt ein expliziter
+  `data-file-viewer`-Vollbild-Button. Kein `window.open` und keine
+  `target="_blank"`-Dateiöffnung mehr in `docs/orbit.js`.
+- Die PDF-Kachel nutzt ein rein dekoratives Vorschausymbol anstelle eines
+  eingebetteten PDF-Iframes, um Ereignisverschlucken zu vermeiden.
+- Rechte Maustaste öffnet das Datei-Kontextmenü; **„In neuem Tab öffnen“**
+  steht dort jetzt an erster Stelle.
+- Escape schließt den Vollbild-Dateibetrachter vor der 3D-Galerie-Navigation
+  (`quality-v28.js`).
+- Versionsparameter an den geänderten JavaScript- und CSS-Assets im
+  `planner.html` erzwingen das Laden der neuen Handler nach dem Reload.
+
+**Regressionstests:** Zusätzlich zu den bestehenden Dateibetrachter-Tests
+werden die realen Capture-Event-Handler von `docs/orbit.js` und
+`docs/file-context.js` in Dokument-Reihenfolge ausgeführt. Geprüft werden
+Linksklick auf die ausgewählte und nicht ausgewählte Datei, Rechtsklick mit
+Menüoption „In neuem Tab öffnen“, rechte Maustaste ohne Dateiaufruf,
+CTA-Element, Escape-Vorrang und Cache-Versionierung.
+
+Der Dateibetrachter verändert keine gemeinsamen Projektdaten. **Kein
+Supabase-Schema-, Auth- oder Storage-Deployment notwendig**. Der reale
+2-Personen-Browser-Test mit privaten Dateien bleibt als Abnahmeaufgabe offen.
