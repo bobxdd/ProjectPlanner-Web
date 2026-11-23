@@ -9,7 +9,7 @@ function fileMenuRender(x,y){const d=DB.documents.find(d=>d.id===fileMenuId);if(
  const p=getProject(d.projectId),projects=sort(DB.projects);const menuButton=(cmd,title,glyph='',hint='')=>`<button type="button" role="menuitem" data-file-command="${cmd}">${glyph?icon(glyph):''}<span>${title}</span>${hint?`<small>${hint}</small>`:''}</button>`;
  if(fileMenuMode==='main'){
   fileMenu.innerHTML=`<div class="file-menu-title"><span class="file-menu-name">${esc(d.name)}</span><small>${esc(p?.name||'Datei-Eingang')} · ${esc(bytes(d.size))}</small></div><div class="file-menu-items">
-  ${menuButton('open','Im Vollbild öffnen','file')}${menuButton('new-tab','In neuem Tab öffnen','file')}${menuButton('download','Herunterladen','download')}${menuButton('annotate','Anmerkungsebene öffnen','edit')}
+  ${menuButton('new-tab','In neuem Tab öffnen','file')}${menuButton('open','Im Vollbild öffnen','file')}${menuButton('download','Herunterladen','download')}${menuButton('annotate','Anmerkungsebene öffnen','edit')}
   <div class="file-menu-separator"></div>
   ${menuButton('move-targets','In anderen Bereich verschieben','arrow','›')}${menuButton('copy-targets','In anderen Bereich kopieren','layers','›')}
   ${menuButton('rename','Umbenennen','edit')}${DB.tasks.some(t=>t.projectId===d.projectId)?menuButton('task-targets','Aufgabe zuordnen','clipboard','›'):''}${d.taskId?menuButton('detach','Von Aufgabe lösen','x'):''}${menuButton('details','Eigenschaften','list')}
