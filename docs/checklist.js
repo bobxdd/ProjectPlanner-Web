@@ -140,7 +140,7 @@ function saveDialog(){
   if(e.kind==='section')updateSection(e.key,s=>{s.title=name.slice(0,120)});
   if(e.kind==='new-section')modify(data=>{data.sections.push({id:freshId(),title:name.slice(0,120),collapsed:false,items:[]})});
   if(e.kind==='item')updateItem(e.key,item=>{item.text=name.slice(0,300)});
-  if(e.kind==='new-item')updateSection(e.sectionId,s=>{s.items.push({id:freshId(),text:name.slice(0,300),done:false,projectId:'',taskId:''})});
+  if(e.kind==='new-item')updateSection(e.sectionId,s=>{s.items.push({id:freshId(),text:name.slice(0,300),done:false,projectId:'',taskId:''});s.collapsed=false});
   if(e.kind==='assign'){
     let projectId=String(fd.get('projectId')||''),taskId=String(fd.get('taskId')||'');
     if(!DB.projects.some(p=>p.id===projectId))projectId='';
