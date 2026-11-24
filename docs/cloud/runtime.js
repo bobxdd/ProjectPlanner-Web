@@ -53,7 +53,22 @@ function trashRemoved(old,next){const entries=[];const gone=(key)=>new Set(next[
 }
 function validate(next){if(!shape(next))throw Error('Ungültiges Projektformat');const size=new TextEncoder().encode(JSON.stringify(next)).length;if(size>9*1024*1024)throw Error('Die Projektmetadaten überschreiten das Größenlimit.');
  for(const key of arrays){if(next[key].length>50000)throw Error('Zu viele '+key);}
- const projectIDs=new Set(next.projects.map(x=>x.id));if(next.tasks.some(t=>!projectIDs.has(t.projectId)))throw Error('Eine Aufgabe gehört zu keinem bestehenden Bereich.');}
+ const projectIDs=new Set(next.projects.map(x=>x.id));if(next.tasks.some(t=>!projectIDs.has(t.projectId)))throw Error('Eine Aufgabe gehört zu keinem bestehenden Bereich.');
+ if(next.gameChecklist!==undefined){
+  const gc=next.gameChecklist;
+  if(!gc||typeof gc!=='object'||Array.isArray(gc)||gc.version!==1||!Array.isArray(gc.sections)||gc.sections.length>100)throw Error('Ungültige Gamedesign-Checkliste.');
+  const seen=new Set();let n=0;
+  for(const section of gc.sections){
+   if(!section||typeof section.id!=='string'||section.id.length>100||seen.has(section.id)||typeof section.title!=='string'||!section.title.trim()||section.title.length>120||typeof section.collapsed!=='boolean'||!Array.isArray(section.items)||section.items.length>500)throw Error('Ungültiger Checklistenabschnitt.');
+   seen.add(section.id);n+=section.items.length;
+   for(const item of section.items){
+    if(!item||typeof item.id!=='string'||item.id.length>100||seen.has(item.id)||typeof item.text!=='string'||!item.text.trim()||item.text.length>300||typeof item.done!=='boolean'||typeof item.projectId!=='string'||item.projectId.length>100||typeof item.taskId!=='string'||item.taskId.length>100)throw Error('Ungültiger Checklistenpunkt.');
+    seen.add(item.id);
+   }
+  }
+  if(n>10000)throw Error('Zu viele Checklistenpunkte.');
+ }
+}
 async function compareSave(next,expected){const current=await getRow();if(current.revision!==expected)return fail('Daten wurden zwischenzeitlich geändert. Bitte neu laden.',409);
  const copy=clone(next);copy.documents=current.payload.documents||[];copy.trash=[...(current.payload.trash||[]),...trashRemoved(current.payload,copy)];copy.revision=expected+1;copy.updatedAt=now();validate(copy);
  const {data,error}=await sb.rpc('planner_state_put',{p_token:session.token,p_revision:expected,p_payload:copy});
