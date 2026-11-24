@@ -72,3 +72,36 @@
 .gc-dialog footer .gc-save{background:#c3b3ee;color:#201d2e;border-color:#d3c7f6;font-weight:700}
 @media(max-width:720px){.gc-hero{align-items:stretch;flex-direction:column}.gc-stat{width:100%}.gc-section-meter{display:none}.gc-section-header{padding:13px 12px}.gc-list{padding:4px 8px}.gc-row{gap:9px;flex-wrap:wrap}.gc-row .gc-link{max-width:100%;order:3;margin-left:30px}.gc-add-form{padding:11px 10px}.gc-add-form button{padding:10px}.gc-toolbar>.gc-search{flex-basis:100%}.gc-add-section{margin-left:auto}}
 @media(prefers-reduced-motion:reduce){.gc-page *{transition:none!important}}
+
+/* Checklist editability: visible controls as well as the right-click menu. */
+.gc-section-actions,.gc-row-actions{display:flex;align-items:center;flex:none;gap:5px}
+.gc-section-add{background:#bba8e91c;border:1px solid #bca8ee5c;border-radius:9px;
+  color:#dbd1ff;white-space:nowrap;padding:7px 10px;min-height:33px;font-weight:650;font-size:11px}
+.gc-section-add:hover{background:#bba8e93d}
+.gc-quick{width:32px;height:32px;min-width:32px;display:inline-flex;
+  justify-content:center;align-items:center;border-radius:8px;border:1px solid #ffffff26;
+  background:#ffffff0a;color:#cfc9e1;font-size:16px;line-height:1}
+.gc-quick:hover{border-color:#c6b0ef9a;background:#b9a2ef29;color:#fff}
+.gc-quick.gc-delete{font-size:21px;color:#e5adb3}
+.gc-quick.gc-delete:hover{border-color:#dc8c9b9a;background:#d0687f28}
+.gc-row-actions .gc-more{opacity:.8}
+.gc-row-actions:focus-within .gc-more,.gc-row:hover .gc-row-actions .gc-more{opacity:1}
+.gc-quick:focus-visible,.gc-section-add:focus-visible{outline:2px solid #d4bcff;outline-offset:2px}
+.top-checklist-tab{padding:9px 15px;border:1px solid #ffffff28;border-radius:10px;
+  background:#ffffff08;color:#d8d3e7;font-size:12px;font-weight:650;white-space:nowrap}
+.top-checklist-tab:hover,.top-checklist-tab.active{background:#bba9ef27;border-color:#bba9ef7f;color:#f4ecff}
+@media(max-width:750px){
+  .gc-section-actions{gap:3px}
+  .gc-section-add{padding:6px 7px;font-size:11px}
+  .gc-quick{width:28px;min-width:28px;height:30px}
+  .gc-row-actions{gap:3px}
+  .gc-row .gc-link{max-width:100%}
+  .top-checklist-tab{padding:7px 10px;font-size:11px}
+}
+@media(max-width:390px){
+  .gc-section-meter{display:none}
+  .gc-section-header{gap:7px}
+  .gc-section-add{font-size:0;min-width:27px;height:30px}
+  .gc-section-add::after{content:'+';font-size:16px}
+  .gc-section-title h2{font-size:13px}
+}
