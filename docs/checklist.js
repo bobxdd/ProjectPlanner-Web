@@ -264,5 +264,5 @@ document.addEventListener('keydown',event=>{
 document.addEventListener('click',event=>{
   if(menu&&!menu.hidden&&!event.target.closest?.('#gc-context,[data-gc-item-menu],[data-gc-section-menu]'))hideMenu(false);
 },true);
-window.PPChecklist={render,seed,state,pct};
+window.PPChecklist={render,seed,state,pct,dismissMenu(){if(menu&&!menu.hidden){hideMenu(true);return true}return false}};
 })();
