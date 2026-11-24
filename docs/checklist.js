@@ -225,7 +225,7 @@ document.addEventListener('submit',event=>{
   updateSection(sectionId,s=>{s.items.push({id:freshId(),text:text.slice(0,300),done:false,projectId:'',taskId:''})});
   document.querySelector('[data-gc-add="'+CSS.escape(sectionId)+'"] input')?.focus({preventScroll:true});
 });
-document.addEventListener('input',event=>{if(event.target.matches?.('[data-gc-search]'))search=event.target.value});
+document.addEventListener('input',event=>{if(event.target.matches?.('[data-gc-search]')){const position=event.target.selectionStart;search=event.target.value;render();const field=document.querySelector('[data-gc-search]');if(field){field.focus({preventScroll:true});if(Number.isInteger(position))field.setSelectionRange(position,position);}}});
 document.addEventListener('click',event=>{
   if(ui.view!=='checklist')return;
   const choice=event.target.closest?.('[data-gc-filter]');
