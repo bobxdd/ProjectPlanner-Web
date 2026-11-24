@@ -71,8 +71,8 @@ test('HTML in checklist text and names remains escaped instead of executable',()
 test('top navigation, dedicated CSS/JS and shared cloud state are wired',()=>{
   assert.match(read('docs/app.js'),/\['checklist','Checkliste','check'\]/);
   assert.match(read('docs/experience.js'),/ui\.view==='checklist'\)window\.PPChecklist\?\.render\(\)/);
-  assert.match(read('docs/planner.html'),/checklist\.js\?v=20261124-gd1/);
-  assert.match(read('docs/planner.html'),/checklist\.css\?v=20261124-gd1/);
+  assert.match(read('docs/planner.html'),/checklist\.js\?v=20261124-gd2/);
+  assert.match(read('docs/planner.html'),/checklist\.css\?v=20261124-gd2/);
   assert.match(read('docs/cloud/runtime.js'),/if\(next\.gameChecklist!==undefined\)/);
   assert.match(read('docs/cloud/runtime.js'),/planner_state_put/);
 });
