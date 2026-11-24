@@ -162,7 +162,7 @@ async function getState(){DB=await (await request('/api/state')).json();persistR
 // pending desktop save is never replaced by an incoming server state.
 function desktopCanRefresh(){
  const active=document.activeElement;
- const editing=active&&active.matches?.('input,textarea,select,[contenteditable="true"]');
+ const editing=active&&active.matches?.('input:not([type="checkbox"]),textarea,select,[contenteditable="true"]');
  return !liveDesktopConflict && !saveTimer && !liveDesktopSaving && !dragged && !editing && !modal.open && !searchModal.open;
 }
 async function desktopLiveRefresh(){
