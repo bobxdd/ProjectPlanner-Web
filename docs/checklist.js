@@ -65,14 +65,23 @@ function render(){
         '<button type="button" class="gc-collapse" data-gc-collapse="'+escHTML(section.id)+'" aria-expanded="'+(!section.collapsed)+'" aria-label="Abschnitt ein- oder ausklappen">'+(section.collapsed?'▸':'▾')+'</button>'+
         '<div class="gc-section-title"><h2>'+(index+1)+'. '+escHTML(section.title)+'</h2><small>'+s.done+' / '+s.total+' erledigt · '+value+'%</small></div>'+
         '<div class="gc-section-meter gc-progress"><span style="width:'+value+'%"></span></div>'+
-        '<button type="button" class="gc-more" data-gc-section-menu="'+escHTML(section.id)+'" title="Abschnitt bearbeiten" aria-label="Abschnitt bearbeiten">···</button>'+
+        '<div class="gc-section-actions">'+
+          '<button type="button" class="gc-section-add" data-gc-command="new-item" data-gc-section-id="'+escHTML(section.id)+'" title="Unterpunkt hinzufügen">+ Punkt</button>'+
+          '<button type="button" class="gc-quick" data-gc-command="edit-section" data-gc-id="'+escHTML(section.id)+'" aria-label="Abschnitt '+escHTML(section.title)+' umbenennen" title="Abschnitt umbenennen">✎</button>'+
+          '<button type="button" class="gc-quick gc-delete" data-gc-command="delete-section" data-gc-id="'+escHTML(section.id)+'" aria-label="Abschnitt '+escHTML(section.title)+' löschen" title="Abschnitt löschen">×</button>'+
+          '<button type="button" class="gc-more" data-gc-section-menu="'+escHTML(section.id)+'" title="Weitere Abschnittsaktionen" aria-label="Weitere Abschnittsaktionen">···</button>'+
+        '</div>'+
         '</header>'+
         '<div class="gc-section-content" '+(section.collapsed?'hidden':'')+'><div class="gc-list">'+
         (visible.length?visible.map(item=>'<div class="gc-row'+(item.done?' is-done':'')+'" data-gc-item="'+escHTML(item.id)+'" tabindex="-1">'+
           '<input type="checkbox" id="gc-check-'+escHTML(item.id)+'" data-gc-check="'+escHTML(item.id)+'" '+(item.done?'checked':'')+' aria-label="'+escHTML(item.text)+' erledigt">'+
           '<label for="gc-check-'+escHTML(item.id)+'" class="gc-row-text">'+escHTML(item.text)+'</label>'+
           (item.projectId?'<button type="button" class="gc-link" data-gc-command="assign" data-gc-id="'+escHTML(item.id)+'" title="Zuordnung bearbeiten">'+escHTML(assignment(item))+'</button>':'')+
-          '<button type="button" class="gc-more gc-row-menu" data-gc-item-menu="'+escHTML(item.id)+'" aria-label="Aktionen für '+escHTML(item.text)+'">···</button>'+
+          '<div class="gc-row-actions">'+
+            '<button type="button" class="gc-quick" data-gc-command="edit-item" data-gc-id="'+escHTML(item.id)+'" aria-label="Unterpunkt '+escHTML(item.text)+' bearbeiten" title="Unterpunkt bearbeiten">✎</button>'+
+            '<button type="button" class="gc-quick gc-delete" data-gc-command="delete-item" data-gc-id="'+escHTML(item.id)+'" aria-label="Unterpunkt '+escHTML(item.text)+' löschen" title="Unterpunkt löschen">×</button>'+
+            '<button type="button" class="gc-more gc-row-menu" data-gc-item-menu="'+escHTML(item.id)+'" aria-label="Weitere Aktionen für '+escHTML(item.text)+'">···</button>'+
+          '</div>'+
           '</div>').join(''):'<div class="gc-no-results">Keine passenden Punkte für diese Ansicht.</div>')+
         '</div><form class="gc-add-form" data-gc-add="'+escHTML(section.id)+'">'+
         '<input name="name" maxlength="300" required autocomplete="off" placeholder="Neuen Checklistenpunkt hinzufügen …" aria-label="Neuer Checklistenpunkt">'+
@@ -241,8 +250,14 @@ document.addEventListener('click',event=>{
   }
   const command=event.target.closest?.('[data-gc-command]');
   if(command){
-    if(command.dataset.gcCommand==='new-section')edit('new-section');
-    if(command.dataset.gcCommand==='assign')edit('assign',command.dataset.gcId);
+    const verb=command.dataset.gcCommand,key=command.dataset.gcId;
+    if(verb==='new-section')edit('new-section');
+    else if(verb==='new-item')edit('new-item','',command.dataset.gcSectionId);
+    else if(verb==='edit-section')edit('section',key);
+    else if(verb==='edit-item')edit('item',key);
+    else if(verb==='delete-section')action('delete',{type:'section',id:key});
+    else if(verb==='delete-item')action('delete',{type:'item',id:key});
+    else if(verb==='assign')edit('assign',key);
     return;
   }
 });
