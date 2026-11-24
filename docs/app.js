@@ -137,7 +137,7 @@ const MODULE_SIZE_OPTIONS=[['compact','Kompakt'],['standard','Standard'],['large
 const moduleSize=v=>['compact','standard','large'].includes(v)?v:'standard';
 const modulePositionOptions=(items,selected)=>items.map((item,i)=>`<option value="${i}" ${item.id===selected?'selected':''}>${i+1} · ${esc(item.title||WIDGET_NAMES[item.kind]||item.kind)}</option>`).join('');
 const WIDGET_NAMES={focus:'Nächste Aufgaben',projects:'Projekte',progress:'Fortschritt',due:'Termine',categories:'Kategorien',documents:'Dateien',inbox:'Datei-Eingang'};
-const NAV=[['home','Übersicht','grid'],['roadmap','Fahrplan','route'],['tasks','Aufgaben','list'],['files','Dateien','file']];
+const NAV=[['home','Übersicht','grid'],['roadmap','Fahrplan','route'],['tasks','Aufgaben','list'],['files','Dateien','file'],['checklist','Checkliste','check']];
 let DB=null,secret='',persistRevision=1,saveTimer=null,saveQueue=Promise.resolve(),toastTimer=null,dragged=null,liveDesktopConflict=null,liveDesktopSaving=0,liveDesktopRefreshing=false,liveDesktopPending=false;
 let ui={view:'home',category:'all',project:'',taskFilter:'all',taskLayout:'list',search:'',fileProject:'all'};
 const modal=$('#modal'),searchModal=$('#search-modal');
@@ -211,7 +211,7 @@ function render(){if(!DB)return;const categories=sort(DB.categories);
  $('#settings-icon').innerHTML=icon('settings');$('#search-symbol').innerHTML=icon('search');$('#top-settings-icon').innerHTML=icon('settings');$('#search-dialog-symbol').innerHTML=icon('search');
  const category=ui.category==='all'?'Alle Bereiche':(getCat(ui.category)?.name||'Alle Bereiche');
  $('#breadcrumb').innerHTML=`Project Planner ${icon('chevron','inline-icon')} <strong>${esc(ui.view==='home'?category:NAV.find(n=>n[0]===ui.view)?.[1]||'Einstellungen')}</strong>`;
- if(ui.view==='home')renderHome();else if(ui.view==='roadmap')renderRoadmap();else if(ui.view==='tasks')renderTasks();else if(ui.view==='files')renderFiles();else renderSettings();
+ if(ui.view==='home')renderHome();else if(ui.view==='roadmap')renderRoadmap();else if(ui.view==='tasks')renderTasks();else if(ui.view==='files')renderFiles();else if(ui.view==='checklist')window.PPChecklist?.render();else renderSettings();
 }
 function header(title,eyebrow,caption,actions=''){return `<div class="page-heading"><div><p class="eyebrow">${eyebrow}</p><h1>${esc(title)}</h1>${caption?`<p class="lede">${esc(caption)}</p>`:''}</div>${actions?`<div class="heading-actions">${actions}</div>`:''}</div>`}
 function hero(){const tasks=filteredTasks(),active=tasks.filter(t=>!isDone(t)).length,completed=tasks.filter(isDone).length;return `<div class="hero-strip"><div style="position:relative;z-index:1"><strong>${esc(ui.category==='all'?'Projektübersicht':getCat(ui.category)?.name||'Projektübersicht')}</strong><div class="hero-meta"><span><b>${visibleProjects().length}</b> Projekte</span><span><b>${active}</b> offene Aufgaben</span><span><b>${completed}</b> erledigt</span></div></div><div class="orb-scene" aria-hidden="true"><div class="orb orb-back"></div><div class="orb"></div></div></div>`}
